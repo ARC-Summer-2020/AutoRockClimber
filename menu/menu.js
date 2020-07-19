@@ -1,6 +1,6 @@
 const { dialog } = require('electron')
 const { app } = require('electron').app
-var usbList=[];
+
 module.exports = {
     template: [
         {
