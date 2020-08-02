@@ -21,6 +21,12 @@ def getImageUploadAndColor():
     """Recieves request of image to be uploaded along with the
     respective color to be found on the image
 
+    Example request: 
+        {
+            "image": <image_file>,
+            "color": pink
+        }
+
     Returns:
         Successful json request message with the rocks places and types provided.
     """
