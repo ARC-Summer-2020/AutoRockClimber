@@ -1,6 +1,5 @@
-from bottle import run, get, post, request, route, response, abort
+from bottle import run, request, route, abort
 import os
-import json
 from PIL import Image
 import tempfile
 
