@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TextField from '@material-ui/core/TextField';
-
+import { remote } from 'electron';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
@@ -92,6 +92,13 @@ const App = () => {
         console.log(false);
     };
 
+    const handleOpenImage = () => {
+      
+      remote.dialog.showOpenDialog(
+        { properties: [ 'openFile'], filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }]}
+        )
+    }
+
     return(
     <div>
       <div className={classes.root}>
@@ -150,7 +157,10 @@ const App = () => {
           <TextField style={{margin:"10px"}} id="outlined-basic" label="Armspan" variant="outlined" />
           <Divider />
           <Typography style={{margin:"10px"}}>2. Upload the route image</Typography>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="File Upload" variant="outlined" />
+          <Button style={{margin:"10px"}} variant="contained" color="secondary" onClick={() => { handleOpenImage()}}> Upload File <input
+    type="file"
+    style={{ display: "none" }}
+  /></Button>
           <Divider />
           <Typography style={{margin:"10px"}}>3. Pick the route color and click Submit</Typography>
           <TextField style={{margin:"10px"}} id="outlined-basic" label="Route Color" variant="outlined" />
