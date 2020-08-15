@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
-import Button from '@material-ui/core/Button';
-import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import Drawer from '@material-ui/core/Drawer';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -44,21 +44,6 @@ const useStyles = makeStyles((theme) => ({
   hide: {
     display: 'none',
   },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  drawerHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-start',
-  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -75,21 +60,67 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginRight: 0,
   },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-start',
+  },
 }));
 
-const App = () => {
+type AppProps = {
+  heightFt: number,
+  heightIn: number,
+  weight: number,
+  armspan: number
+}
+
+const App = ({heightFt, heightIn, weight, armspan}:AppProps) => {
     const classes = useStyles();
     const theme = useTheme();
+
     const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
-        console.log(true);
     };
 
     const handleDrawerClose = () => {
         setOpen(false);
-        console.log(false);
+    };
+
+    const handleOnChange = (event: { target: { value: any; }; }, label: string) => {
+      // console.log(event.target.value);
+      // console.log(label);
+
+      if(label == "hf"){
+        heightFt = event.target.value;
+      }
+      else if(label == "hi"){
+        heightIn = event.target.value;
+      }
+      else if(label == "w"){
+        weight = event.target.value;
+      }
+      else if(label == "a"){
+        armspan = event.target.value;
+      }
+
+      // console.log("hf:" + heightFt + " hi:" + heightIn + " w:" + weight + " a:" + armspan);
+    };
+
+    const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      //send data somewhere and close nav?
+      handleDrawerClose();
     };
 
     return(
@@ -134,27 +165,28 @@ const App = () => {
           anchor="right"
           open={open}
           classes={{
-            paper: classes.drawerPaper,
+              paper: classes.drawerPaper,
           }}
         >
           <div className={classes.drawerHeader}>
-            <IconButton onClick={handleDrawerClose}>
+              <IconButton onClick={handleDrawerClose}>
               <ChevronRightIcon />
-            </IconButton>
-            <Typography>ARC :)</Typography>
+              </IconButton>
+              <Typography>ARC :)</Typography>
           </div>
           <Divider />
           <Typography style={{margin:"10px"}}>1. Enter your dimensions</Typography>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Height" variant="outlined" />
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Weight" variant="outlined" />
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Armspan" variant="outlined" />
+          <TextField style={{margin:"10px"}} id="outlined-basic" label="Height (ft)" variant="outlined" onChange={(e)=>{handleOnChange(e, "hf")}}/>
+          <TextField style={{margin:"10px"}} id="outlined-basic" label="Height (in)" variant="outlined" onChange={(e)=>{handleOnChange(e, "hi")}}/>
+          <TextField style={{margin:"10px"}} id="outlined-basic" label="Weight" variant="outlined" onChange={(e)=>{handleOnChange(e, "w")}}/>
+          <TextField style={{margin:"10px"}} id="outlined-basic" label="Armspan" variant="outlined" onChange={(e)=>{handleOnChange(e, "a")}}/>
           <Divider />
           <Typography style={{margin:"10px"}}>2. Upload the route image</Typography>
           <TextField style={{margin:"10px"}} id="outlined-basic" label="File Upload" variant="outlined" />
           <Divider />
           <Typography style={{margin:"10px"}}>3. Pick the route color and click Submit</Typography>
           <TextField style={{margin:"10px"}} id="outlined-basic" label="Route Color" variant="outlined" />
-          <Button style={{margin:"10px"}} variant="contained" color="secondary"> Submit </Button>
+          <Button style={{margin:"10px"}} variant="contained" color="secondary" onClick={(e)=>{handleSubmit(e)}}> Submit </Button> 
         </Drawer>
       </div>
     </div>
