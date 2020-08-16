@@ -13,6 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TextField from '@material-ui/core/TextField';
 import { remote } from 'electron';
+const fs = remote.require('fs');
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
@@ -97,6 +98,13 @@ const App = () => {
       remote.dialog.showOpenDialog(
         { properties: [ 'openFile'], filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }]}
         )
+        .then(data=>{
+          var _img = fs.readFileSync(data.filePaths[0]).toString('base64');
+          var _out = '<img src="data:image/png;base64,' + _img + '" />';
+          document.getElementById('imagePlaceholder').innerHTML = "";
+          var _target = document.getElementById('imagePlaceholder');
+          _target.insertAdjacentHTML('beforeend', _out);
+        })
     }
 
     return(
@@ -132,7 +140,7 @@ const App = () => {
           <div className={classes.drawerHeader} />
           <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
             {/* <img width="75%" src={bouldering} alt="Indoor Bouldering" /> */}
-            <p>IMAGE WILL BE HERE</p>
+            <div id='imagePlaceholder'></div>
           </div>
         </main>
         <Drawer
