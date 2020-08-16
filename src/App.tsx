@@ -176,10 +176,10 @@ const App = ({heightFt, heightIn, weight, armspan}:AppProps) => {
           </div>
           <Divider />
           <Typography style={{margin:"10px"}}>1. Enter your dimensions</Typography>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Height (ft)" variant="outlined" onChange={(e)=>{handleOnChange(e, "hf")}}/>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Height (in)" variant="outlined" onChange={(e)=>{handleOnChange(e, "hi")}}/>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Weight" variant="outlined" onChange={(e)=>{handleOnChange(e, "w")}}/>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Armspan" variant="outlined" onChange={(e)=>{handleOnChange(e, "a")}}/>
+          <TextField style={{margin:"10px"}} id="outlined-basic" label="Height (ft)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "hf")}}/>
+          <TextField style={{margin:"10px"}} id="outlined-basic" label="Height (in)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "hi")}}/>
+          <TextField style={{margin:"10px"}} id="outlined-basic" label="Weight (lbs)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "w")}}/>
+          <TextField style={{margin:"10px"}} id="outlined-basic" label="Armspan (ft)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "a")}}/>
           <Divider />
           <Typography style={{margin:"10px"}}>2. Upload the route image</Typography>
           <TextField style={{margin:"10px"}} id="outlined-basic" label="File Upload" variant="outlined" />
