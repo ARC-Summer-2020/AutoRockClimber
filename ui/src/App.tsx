@@ -17,7 +17,7 @@ const fs = remote.require('fs');
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
-// import bouldering from "./images/Bouldering-Start-Image.jpg";
+import bouldering from './images/Bouldering-Start-Image.jpg';
 
 const drawerWidth = 240;
 
@@ -139,8 +139,7 @@ const App = () => {
         >
           <div className={classes.drawerHeader} />
           <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
-            {/* <img width="75%" src={bouldering} alt="Indoor Bouldering" /> */}
-            <div id='imagePlaceholder'></div>
+            <img width="75%" src={bouldering} alt="Indoor Bouldering" />
           </div>
         </main>
         <Drawer
