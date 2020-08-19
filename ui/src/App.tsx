@@ -139,7 +139,8 @@ const App = () => {
         >
           <div className={classes.drawerHeader} />
           <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
-            <img width="75%" src={bouldering} alt="Indoor Bouldering" />
+            <img width="130%" src={bouldering} alt="Indoor Bouldering" />
+            <div id='imagePlaceholder'></div>
           </div>
         </main>
         <Drawer
