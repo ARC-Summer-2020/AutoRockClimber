@@ -7,7 +7,7 @@ import os
 directory = ''
 
 for filename in os.listdir(directory):
-    if filename.endswith(".jpg"):
+    if filename.endswith('.jpg'):
         path = directory + '/' + filename
         image_path = load_img(path)
         data = img_to_array(image_path)
