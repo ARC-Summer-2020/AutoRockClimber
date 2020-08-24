@@ -19,7 +19,7 @@ for filename in os.listdir(directory):
 
             # Play around with the combo of bgr to get different colors
             # Images that are made of 3 colors in a channel are refered to as 'RGB'
-            new_img = Image.merge('RGB', (r, g, b))
+            new_img = Image.merge('RGB', (b, r, g))
 
         elif(img.mode == 'RGBA'):
             # Returns a tuple
