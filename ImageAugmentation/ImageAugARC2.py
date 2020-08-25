@@ -1,28 +1,22 @@
-import matplotlib.pyplot as plt
-import numpy as np
-from scipy import misc, ndimage
-import keras
-from keras import backend as K
 from keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
-from sklearn.preprocessing import LabelEncoder
-import PIL
-
 from numpy import expand_dims
 from matplotlib import pyplot
-
 import os
 
-directory = '/Users/mary/Documents/PersonalProject/AutoRockClimber/ImageAugmentation/ARC_Dataset_Rockwall/ARC2'
+# hard coding a directory, choose the directory the images are stored in
+directory = ''
+
 for filename in os.listdir(directory):
-    if filename.endswith(".jpg"):
+    if filename.endswith('.jpg'):
         path = directory + '/' + filename
         image_path = load_img(path)
         data = img_to_array(image_path)
         samples = expand_dims(data, 0)
         gen = ImageDataGenerator(rotation_range=16, width_shift_range=0.2, 
         height_shift_range=0.1, shear_range=0.21, zoom_range=0.2, channel_shift_range=13, horizontal_flip=True, vertical_flip= True)
-        # prepare iterator
-        it = gen.flow(samples, batch_size=1, save_to_dir='/Users/mary/Documents/PersonalProject/AutoRockClimber/ImageAugmentation/ARC_Dataset_Rockwall/ARC_AUG', 
+        
+        # prepare iterator, dont forget to fill out which directory you want to save the images to
+        it = gen.flow(samples, batch_size=1, save_to_dir='', 
         save_prefix='Aug_ARC2', save_format='jpg')
         # generate samples and plot
         for i in range(3):
