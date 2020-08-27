@@ -13,6 +13,11 @@ import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
@@ -75,20 +80,29 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
     justifyContent: 'flex-start',
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
 }));
 
-type AppProps = {
-  heightFt: number,
-  heightIn: number,
-  weight: number,
-  armspan: number
-}
-
-const App = ({heightFt, heightIn, weight, armspan}:AppProps) => {
+const App = () => {
     const classes = useStyles();
     const theme = useTheme();
 
     const [open, setOpen] = React.useState(false);
+
+    //Number Input Fields
+    const [heightFt, setHeightFt] = React.useState(0);
+    const [heightIn, setHeightIn] = React.useState(0);
+    const [weight, setWeight] = React.useState(0);
+    const [armspan, setArmspan] = React.useState(0);
+
+    //Color
+    const [color, setColor] = React.useState('');
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -99,28 +113,40 @@ const App = ({heightFt, heightIn, weight, armspan}:AppProps) => {
     };
 
     const handleOnChange = (event: { target: { value: any; }; }, label: string) => {
-      // console.log(event.target.value);
-      // console.log(label);
+      console.log(event.target.value);
+      console.log(label);
 
       if(label == "hf"){
-        heightFt = event.target.value;
+        setHeightFt(event.target.value);
       }
       else if(label == "hi"){
-        heightIn = event.target.value;
+        setHeightIn(event.target.value);
       }
       else if(label == "w"){
-        weight = event.target.value;
+        setWeight(event.target.value);
       }
       else if(label == "a"){
-        armspan = event.target.value;
+        setArmspan(event.target.value);
       }
 
       // console.log("hf:" + heightFt + " hi:" + heightIn + " w:" + weight + " a:" + armspan);
     };
 
     const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      //send data somewhere and close nav?
-      handleDrawerClose();
+      //TODO: send data somewhere and close nav?
+      //TODO: add image check here
+      if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != ""){
+        handleDrawerClose();
+      }
+      else{
+        alert("You must fill all fields correctly before submitting. All number values must be > 0.");
+      }
+      
+    };
+
+    const handleChange = (event: React.ChangeEvent<{ name?: string; value: unknown; }>) => {
+      var valueString = String(event.target.value);
+      setColor(valueString);
     };
 
     return(
@@ -185,7 +211,33 @@ const App = ({heightFt, heightIn, weight, armspan}:AppProps) => {
           <TextField style={{margin:"10px"}} id="outlined-basic" label="File Upload" variant="outlined" />
           <Divider />
           <Typography style={{margin:"10px"}}>3. Pick the route color and click Submit</Typography>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Route Color" variant="outlined" />
+          
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel id="demo-simple-select-outlined-label">Route Color</InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              value={color}
+              onChange={(e)=>{handleChange(e)}}
+              label="Route Color"
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={"blue"}>Blue</MenuItem>
+              <MenuItem value={"green"}>Green</MenuItem>
+              <MenuItem value={"black"}>Black</MenuItem>
+              <MenuItem value={"red"}>Red</MenuItem>
+              <MenuItem value={"pink"}>Pink</MenuItem>
+              <MenuItem value={"purple"}>Purple</MenuItem>
+              <MenuItem value={"white"}>White</MenuItem>
+              <MenuItem value={"orange"}>Orange</MenuItem>
+              <MenuItem value={"yellow"}>Yellow</MenuItem>
+              <MenuItem value={"brown"}>Brown</MenuItem>
+              <MenuItem value={"grey"}>Grey</MenuItem>
+            </Select>
+          </FormControl>
+          
           <Button style={{margin:"10px"}} variant="contained" color="secondary" onClick={(e)=>{handleSubmit(e)}}> Submit </Button> 
         </Drawer>
       </div>
