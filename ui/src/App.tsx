@@ -104,12 +104,13 @@ const App = () => {
           document.getElementById('imagePlaceholder').innerHTML = "";
           var _target = document.getElementById('imagePlaceholder');
           _target.insertAdjacentHTML('beforeend', _out);
+          document.getElementById('imageBouldering').hidden = true;
         })
     }
 
     return(
     <div>
-      <div className={classes.root}>
+      <div className={classes.root} style={{width: '130%'}}>
         <CssBaseline />
         <AppBar
           position="fixed"
@@ -139,7 +140,7 @@ const App = () => {
         >
           <div className={classes.drawerHeader} />
           <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
-            <img width="130%" src={bouldering} alt="Indoor Bouldering" />
+            <img width="130%" id="imageBouldering" src={bouldering} alt="Indoor Bouldering" />
             <div id='imagePlaceholder'></div>
           </div>
         </main>
