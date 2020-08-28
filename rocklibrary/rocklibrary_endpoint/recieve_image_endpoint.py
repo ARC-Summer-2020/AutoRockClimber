@@ -15,6 +15,8 @@ header = ['content-type']
 # Keys: imagePath, color
 imageUpload = {}
 
+colors = ['green', 'blue', 'yellow', 'red', 'purple', 'pink', 'black', 'brown', 'dark red', 'dark yellow', 'dark blue',
+            'light red', 'light green', 'grey', 'orange', 'white']
 @route('/rockLibrary/imageupload', method='POST')
 def getImageUploadAndColor():
     """Recieves request of image to be uploaded along with the
@@ -33,10 +35,27 @@ def getImageUploadAndColor():
         print(request.get_header(head))
         if headers.get(head) not in request.get_header(head):
             abort(406, 'Incorrect headers')
+    
+    
     colorRequest = request.forms.get('color')
     imageRequest = request.files.get('image')
-    if not (colorRequest or imageRequest):
+    if not (colorRequest and imageRequest):
         abort(400, 'Bad request')
+
+    if not colorRequest in colors:
+        abort(407, 'Bad color input')
+
+    userHeightRequest = request.forms.get('userHeight')
+    if userHeightRequest is not None and not userHeightRequest.isnumeric():
+        abort(400, 'Bad user height number input')
+    else:
+        userHeightRequest = ''
+
+    wallHeightRequest = request.forms.get('wallHeight')
+    if wallHeightRequest is not None and not wallHeightRequest.isnumeric():
+        abort(400, 'Bad wall height number input')
+    else:
+        wallHeightRequest = ''
 
     imageName = imageRequest.filename.split('.')
     if len(imageName) > 2 or imageName[len(imageName)-1] not in ('jpeg', 'jpg', 'png'):

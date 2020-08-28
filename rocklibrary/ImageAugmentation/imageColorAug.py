@@ -28,7 +28,7 @@ for filename in os.listdir(directory):
             new_img = Image.merge('RGB', (r, g, b, a))
 
         # Hardcode new path, using {0} with format(new_file_names+1) to configure new file name
-        new_img.save("/Users/mary/Documents/PersonalProject/images/Altered/img{0}.jpg".format(new_file_names+1))
+        new_img.save("/Users/mary/Documents/PersonalProject/images/Altered/img{0}.jpg".format(new_file_names))
     
         # This is the ending number to the new image file name, ex: img1, img2, etc.
         new_file_names += 1             
