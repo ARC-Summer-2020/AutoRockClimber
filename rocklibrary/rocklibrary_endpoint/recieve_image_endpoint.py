@@ -46,16 +46,14 @@ def getImageUploadAndColor():
         abort(407, 'Bad color input')
 
     userHeightRequest = request.forms.get('userHeight')
-    if userHeightRequest is not None:
-        if not userHeightRequest.isnumeric():
-            abort(400, 'Bad user height number input')
+    if userHeightRequest is not None and not userHeightRequest.isnumeric():
+        abort(400, 'Bad user height number input')
     else:
         userHeightRequest = ""
 
     wallHeightRequest = request.forms.get('wallHeight')
-    if wallHeightRequest is not None:
-            if not wallHeightRequest.isnumeric():
-                abort(400, 'Bad user height number input')
+    if wallHeightRequest is not None and not wallHeightRequest.isnumeric():
+        abort(400, 'Bad user height number input')
     else:
         wallHeightRequest = ""
 
