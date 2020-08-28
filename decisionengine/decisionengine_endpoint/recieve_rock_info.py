@@ -47,6 +47,20 @@ def find_path():
         if not (rock.get('placement') or rock.get('type')):
             abort(400, 'Bad request')
 
+    userHeightRequest = request.forms.get('userHeight')
+    if userHeightRequest is not None:
+        if not userHeightRequest.isnumeric():
+            abort(400, 'Bad user height number input')
+    else:
+        userHeightRequest = ""
+
+    wallHeightRequest = request.forms.get('wallHeight')
+    if wallHeightRequest is not None:
+            if not wallHeightRequest.isnumeric():
+                abort(400, 'Bad user height number input')
+    else:
+        wallHeightRequest = ""
+
     return {'Message': 'Request successfully recieved, congratz on your rockz', 'Response rocks': rocks}
 
 run(host='localhost', port=8001, reloader=True, debug=True)
