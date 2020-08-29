@@ -22,6 +22,10 @@ import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 // import bouldering from "./images/Bouldering-Start-Image.jpg";
+import request from 'request';
+import { remote } from 'electron';
+const fs = remote.require('fs');
+// import { request} from 'request';
 
 const drawerWidth = 240;
 
@@ -92,6 +96,8 @@ const useStyles = makeStyles((theme) => ({
 const App = () => {
     const classes = useStyles();
     const theme = useTheme();
+    var uploadedImage = "";
+    var uploadedImagePath = "";
 
     const [open, setOpen] = React.useState(false);
 
@@ -111,6 +117,24 @@ const App = () => {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    const handleOpenImage = () => {
+
+      remote.dialog.showOpenDialog(
+        { properties: [ 'openFile'], filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }]}
+        )
+        .then(data=>{
+          var _img = fs.readFileSync(data.filePaths[0]).toString('base64');
+          var _out = '<img src="data:image/png;base64,' + _img + '" />';
+          document.getElementById('imagePlaceholder').innerHTML = "";
+          var _target = document.getElementById('imagePlaceholder');
+          _target.insertAdjacentHTML('beforeend', _out);
+          // document.getElementById('imageBouldering').hidden = true;
+          uploadedImage = _img;
+          uploadedImagePath = data.filePaths[0];
+        })
+    }
+    
 
     const handleOnChange = (event: { target: { value: any; }; }, label: string) => {
       console.log(event.target.value);
@@ -133,12 +157,49 @@ const App = () => {
     };
 
     const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      //TODO: send data somewhere and close nav?
-      //TODO: add image check here
+      //TODO: do something with response when there is one
+      //TODO: add image check != null to if statement
       if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != ""){
         handleDrawerClose();
-        console.log('hi');
-      }
+        
+        // Push data to server
+        // Convert image string to blob
+        // from https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+        const byteCharacters = atob(uploadedImage);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+          const slice = byteCharacters.slice(offset, offset + 512);
+
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+
+          const byteArray = new Uint8Array(byteNumbers);
+          byteArrays.push(byteArray);
+        }
+
+        const blobImage = new Blob(byteArrays, {type: 'image'});
+
+        // Building FormData for request
+        var formdata = new FormData();
+        formdata.append("image", blobImage, uploadedImagePath);
+        formdata.append("color", "blue");
+
+        // Building Request
+        var requestOptions = {
+          method: 'POST',
+          body: formdata,
+          mode: 'no-cors'
+        };
+
+        //Send request to server
+        fetch("http://localhost:8002/rockLibrary/imageupload", requestOptions)
+          .then(response => response.text())
+          .then(result => console.log(result))
+          .catch(error => console.log('error', error));
+        }
       else{
         alert("You must fill all fields correctly before submitting. All number values must be > 0.");
       }
@@ -184,6 +245,7 @@ const App = () => {
           <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
             {/* <img width="75%" src={bouldering} alt="Indoor Bouldering" /> */}
             <p>IMAGE WILL BE HERE</p>
+            <div id='imagePlaceholder'></div>
           </div>
         </main>
         <Drawer
@@ -209,7 +271,10 @@ const App = () => {
           <TextField style={{margin:"10px"}} id="outlined-basic" label="Armspan (ft)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "a")}}/>
           <Divider />
           <Typography style={{margin:"10px"}}>2. Upload the route image</Typography>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="File Upload" variant="outlined" />
+          <Button style={{margin:"10px"}} variant="contained" color="secondary" onClick={() => { handleOpenImage()}}> Upload File <input
+            type="file"
+            style={{ display: "none" }}
+          /></Button>
           <Divider />
           <Typography style={{margin:"10px"}}>3. Pick the route color and click Submit</Typography>
           
