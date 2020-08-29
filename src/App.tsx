@@ -137,6 +137,7 @@ const App = () => {
       //TODO: add image check here
       if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != ""){
         handleDrawerClose();
+        console.log('hi');
       }
       else{
         alert("You must fill all fields correctly before submitting. All number values must be > 0.");
