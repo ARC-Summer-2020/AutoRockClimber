@@ -2,363 +2,212 @@ import unittest
 import time
 from decisionengine.dijkstras import Dijkstras
 
-# Class that time tests the graphs for dijkstras algorithm
-# Completeness
-
 class DijkstrasTimeTest(unittest.TestCase):
+    """
+    Class that time tests the graphs for dijkstras algorithm
+    Completeness
+    """
     def setUp(self):
-
         #Graph with 26 Nodes
-        self.g1 = {'a': [('b', 1), ('c', 3)],
-
-                   'b': [('a', 1), ('c', 3), ('e', 2), ('i', 1)],
-
-                   'c': [('a', 3), ('b', 1), ('d', 2)],
-
-                   'd': [('c', 2), ('e', 1), ('f', 2), ('g', 2),('h',1)],
-
-                   'e': [('d', 1), ('b', 2), ('h', 1)],
-
-                   'f': [('d', 2), ('g', 3), ('p', 3)],
-
-                   'g': [('d', 2), ('e', 1), ('p', 2), ('h', 2)],
-
-                   'h': [('e', 1), ('d', 2), ('l', 2)],
-                   
-                   'i': [('b', 1), ('j', 1), ('k', 3)],
-                   
-                   'j': [('i', 1), ('l', 1)],
-                   
-                   'k': [('i', 3), ('m', 1)],
-                   
-                   'l': [('h', 2), ('j', 1), ('s', 1)],
-                   
-                   'm': [('k', 1), ('n', 1)],
-                   
-                   'n': [('m', 1), ('o', 2)],
-                   
-                   'o': [('n', 2), ('w', 6)],
-                   
-                   'p': [('f', 3), ('g', 1), ('q', 1)],
-                   
-                   'q': [('r', 2), ('p', 1)],
-                   
-                   'r': [('q', 1), ('v', 2)],
-                   
-                   's': [('l', 1), ('t', 1)],
-                   
-                   't': [('s', 1), ('v', 2), ('u', 1)],
-                   
-                   'u': [('t', 1), ('w', 1)],
-                   
-                   'v': [('t', 2), ('r', 2), ('x', 1)],
-                   
-                   'w': [('o', 6), ('u', 1), ('z', 1)],
-                   
-                   'x': [('v', 1), ('z', 1)],
-                   
-                   'z': [('x', 1), ('w', 1)]
-
+        self.g1 = {'a': [('b',1), ('c',3)],
+                   'b': [('a',1), ('c',3), ('e',2), ('i',1)],
+                   'c': [('a',3), ('b',1), ('d',2)],
+                   'd': [('c',2), ('e',1), ('f',2), ('g',2), ('h',1)],
+                   'e': [('d',1), ('b',2), ('h',1)],
+                   'f': [('d',2), ('g',3), ('p',3)],
+                   'g': [('d',2), ('e',1), ('p',2), ('h',2)],
+                   'h': [('e',1), ('d',2), ('l',2)],
+                   'i': [('b',1), ('j',1), ('k',3)],
+                   'j': [('i',1), ('l',1)],
+                   'k': [('i',3), ('m',1)],
+                   'l': [('h',2), ('j',1), ('s',1)],
+                   'm': [('k',1), ('n',1)],
+                   'n': [('m',1), ('o',2)],
+                   'o': [('n',2), ('w',6)],
+                   'p': [('f',3), ('g',1), ('q',1)],
+                   'q': [('r',2), ('p',1)],
+                   'r': [('q',1), ('v',2)],
+                   's': [('l',1), ('t',1)],
+                   't': [('s',1), ('v',2), ('u',1)],
+                   'u': [('t',1), ('w',1)],
+                   'v': [('t',2), ('r',2), ('x',1)],
+                   'w': [('o',6), ('u',1), ('z',1)],
+                   'x': [('v',1), ('z',1)],
+                   'z': [('x',1), ('w',1)]
                     }
+
         #Graph with 52 nodes
-
-        self.g2 = {'a': [('aLeft', 3), ('b', 1), ('c', 3)],
-
-                   'b': [('a', 1), ('c', 3), ('e', 2), ('i', 1)],
-
-                   'c': [('a', 3), ('b', 1), ('d', 2)],
-
-                   'd': [('c', 2), ('e', 1), ('f', 2), ('g', 2),('h',1)],
-
-                   'e': [('d', 1), ('b', 2), ('h', 1)],
-
-                   'f': [('d', 2), ('g', 3), ('p', 3)],
-
-                   'g': [('d', 2), ('e', 1), ('p', 2), ('h', 2)],
-
-                   'h': [('e', 1), ('d', 2), ('l', 2)],
-                   
-                   'i': [('b', 1), ('j', 1), ('k', 3)],
-                   
-                   'j': [('i', 1), ('l', 1)],
-                   
-                   'k': [('i', 3), ('m', 1)],
-                   
-                   'l': [('h', 2), ('j', 1), ('s', 1)],
-                   
-                   'm': [('k', 1), ('n', 1)],
-                   
-                   'n': [('m', 1), ('o', 2)],
-                   
-                   'o': [('n', 2), ('w', 6)],
-                   
-                   'p': [('f', 3), ('g', 1), ('q', 1)],
-                   
-                   'q': [('r', 2), ('p', 1)],
-                   
-                   'r': [('q', 1), ('v', 2)],
-                   
-                   's': [('l', 1), ('t', 1)],
-                   
-                   't': [('s', 1), ('v', 2), ('u', 1)],
-                   
-                   'u': [('t', 1), ('w', 1)],
-                   
-                   'v': [('t', 2), ('r', 2), ('x', 1)],
-                   
-                   'w': [('o', 6), ('u', 1), ('z', 1)],
-                   
-                   'x': [('v', 1), ('z', 1)],
-                   
-                   'z': [('x', 1), ('w', 1)], 
-
-                   'aLeft': [('a', 3),('bLeft', 1), ('cLeft', 3)],
-
-                   'bLeft': [('aLeft', 1), ('cLeft', 3), ('eLeft', 2), ('iLeft', 1)],
-
-                   'cLeft': [('aLeft', 3), ('bLeft', 1), ('dLeft', 2)],
-
-                   'dLeft': [('cLeft', 2), ('eLeft', 1), ('fLeft', 2), ('gLeft', 2),('hLeft',1)],
-
-                   'eLeft': [('dLeft', 1), ('bLeft', 2), ('hLeft', 1)],
-
-                   'fLeft': [('dLeft', 2), ('gLeft', 3), ('pLeft', 3)],
-
-                   'gLeft': [('dLeft', 2), ('eLeft', 1), ('pLeft', 2), ('hLeft', 2)],
-
-                   'hLeft': [('eLeft', 1), ('dLeft', 2), ('lLeft', 2)],
-                   
-                   'iLeft': [('bLeft', 1), ('jLeft', 1), ('kLeft', 3)],
-                   
-                   'jLeft': [('iLeft', 1), ('lLeft', 1)],
-                   
-                   'kLeft': [('iLeft', 3), ('mLeft', 1)],
-                   
-                   'lLeft': [('hLeft', 2), ('jLeft', 1), ('sLeft', 1)],
-                   
-                   'mLeft': [('kLeft', 1), ('nLeft', 1)],
-                   
-                   'nLeft': [('mLeft', 1), ('oLeft', 2)],
-                   
-                   'oLeft': [('nLeft', 2), ('wLeft', 6)],
-                   
-                   'pLeft': [('fLeft', 3), ('gLeft', 1), ('qLeft', 1)],
-                   
-                   'qLeft': [('rLeft', 2), ('pLeft', 1)],
-                   
-                   'rLeft': [('qLeft', 1), ('vLeft', 2)],
-                   
-                   'sLeft': [('lLeft', 1), ('tLeft', 1)],
-                   
-                   'tLeft': [('sLeft', 1), ('vLeft', 2), ('uLeft', 1)],
-                   
-                   'uLeft': [('tLeft', 1), ('wLeft', 1)],
-                   
-                   'vLeft': [('tLeft', 2), ('rLeft', 2), ('xLeft', 1)],
-                   
-                   'wLeft': [('oLeft', 6), ('uLeft', 1), ('zLeft', 1)],
-                   
-                   'xLeft': [('vLeft', 1), ('zLeft', 1)],
-                   
-                   'zLeft': [('xLeft', 1), ('wLeft', 1)]
+        self.g2 = {'a': [('a0',3), ('b',1), ('c',3)],
+                   'b': [('a',1), ('c',3), ('e',2), ('i',1)],
+                   'c': [('a',3), ('b',1), ('d',2)],
+                   'd': [('c',2), ('e',1), ('f',2), ('g',2), ('h',1)],
+                   'e': [('d',1), ('b',2), ('h',1)],
+                   'f': [('d',2), ('g',3), ('p',3)],
+                   'g': [('d',2), ('e',1), ('p',2), ('h',2)],
+                   'h': [('e',1), ('d',2), ('l',2)],
+                   'i': [('b',1), ('j',1), ('k',3)],
+                   'j': [('i',1), ('l',1)],
+                   'k': [('i',3), ('m',1)],
+                   'l': [('h',2), ('j',1), ('s',1)],
+                   'm': [('k',1), ('n',1)],
+                   'n': [('m',1), ('o',2)],
+                   'o': [('n',2), ('w',6)],
+                   'p': [('f',3), ('g',1), ('q',1)],
+                   'q': [('r',2), ('p',1)],
+                   'r': [('q',1), ('v',2)],
+                   's': [('l',1), ('t',1)],
+                   't': [('s',1), ('v',2), ('u',1)],
+                   'u': [('t',1), ('w',1)],
+                   'v': [('t',2), ('r',2), ('x',1)],
+                   'w': [('o',6), ('u',1), ('z',1)],
+                   'x': [('v',1), ('z',1)],
+                   'z': [('x',1), ('w',1)],
+                   'a0': [('a',3), ('b0',1), ('c0',3)],
+                   'b0': [('a0',1), ('c0',3), ('e0',2), ('i0',1)],
+                   'c0': [('a0',3), ('b0',1), ('d0',2)],
+                   'd0': [('c0',2), ('e0',1), ('f0',2), ('g0',2), ('h0',1)],
+                   'e0': [('d0',1), ('b0',2), ('h0',1)],
+                   'f0': [('d0',2), ('g0',3), ('p0',3)],
+                   'g0': [('d0',2), ('e0',1), ('p0',2), ('h0',2)],
+                   'h0': [('e0',1), ('d0',2), ('l0',2)],
+                   'i0': [('b0',1), ('j0',1), ('k0',3)],
+                   'j0': [('i0',1), ('l0',1)],
+                   'k0': [('i0',3), ('m0',1)],
+                   'l0': [('h0',2), ('j0',1), ('s0',1)],
+                   'm0': [('k0',1), ('n0',1)],
+                   'n0': [('m0',1), ('o0',2)],
+                   'o0': [('n0',2), ('w0',6)],
+                   'p0': [('f0',3), ('g0',1), ('q0',1)],
+                   'q0': [('r0',2), ('p0',1)],
+                   'r0': [('q0',1), ('v0',2)],
+                   's0': [('l0',1), ('t0',1)],
+                   't0': [('s0',1), ('v0',2), ('u0',1)],
+                   'u0': [('t0',1), ('w0',1)],
+                   'v0': [('t0',2), ('r0',2), ('x0',1)],
+                   'w0': [('o0',6), ('u0',1), ('z0',1)],
+                   'x0': [('v0',1), ('z0',1)],
+                   'z0': [('x0',1), ('w0',1)]
                     }
-          
+
         # Test with 78 Nodes
-        self.g3 = {'a': [('aLeft', 3),('aRight', 2), ('b', 1), ('c', 3)],
-
-                   'b': [('a', 1), ('c', 3), ('e', 2), ('i', 1)],
-
-                   'c': [('a', 3), ('b', 1), ('d', 2)],
-
-                   'd': [('c', 2), ('e', 1), ('f', 2), ('g', 2),('h',1)],
-
-                   'e': [('d', 1), ('b', 2), ('h', 1)],
-
-                   'f': [('d', 2), ('g', 3), ('p', 3)],
-
-                   'g': [('d', 2), ('e', 1), ('p', 2), ('h', 2)],
-
-                   'h': [('e', 1), ('d', 2), ('l', 2)],
-                   
-                   'i': [('b', 1), ('j', 1), ('k', 3)],
-                   
-                   'j': [('i', 1), ('l', 1)],
-                   
-                   'k': [('i', 3), ('m', 1)],
-                   
-                   'l': [('h', 2), ('j', 1), ('s', 1)],
-                   
-                   'm': [('k', 1), ('n', 1)],
-                   
-                   'n': [('m', 1), ('o', 2)],
-                   
-                   'o': [('n', 2), ('w', 6)],
-                   
-                   'p': [('f', 3), ('g', 1), ('q', 1)],
-                   
-                   'q': [('r', 2), ('p', 1)],
-                   
-                   'r': [('q', 1), ('v', 2)],
-                   
-                   's': [('l', 1), ('t', 1)],
-                   
-                   't': [('s', 1), ('v', 2), ('u', 1)],
-                   
-                   'u': [('t', 1), ('w', 1)],
-                   
-                   'v': [('t', 2), ('r', 2), ('x', 1)],
-                   
-                   'w': [('o', 6), ('u', 1), ('z', 1)],
-                   
-                   'x': [('v', 1), ('z', 1)],
-                   
-                   'z': [('x', 1), ('w', 1)], 
-
-                   'aLeft': [('a', 3),('bLeft', 1), ('cLeft', 3)],
-
-                   'bLeft': [('aLeft', 1), ('cLeft', 3), ('eLeft', 2), ('iLeft', 1)],
-
-                   'cLeft': [('aLeft', 3), ('bLeft', 1), ('dLeft', 2)],
-
-                   'dLeft': [('cLeft', 2), ('eLeft', 1), ('fLeft', 2), ('gLeft', 2),('hLeft',1)],
-
-                   'eLeft': [('dLeft', 1), ('bLeft', 2), ('hLeft', 1)],
-
-                   'fLeft': [('dLeft', 2), ('gLeft', 3), ('pLeft', 3)],
-
-                   'gLeft': [('dLeft', 2), ('eLeft', 1), ('pLeft', 2), ('hLeft', 2)],
-
-                   'hLeft': [('eLeft', 1), ('dLeft', 2), ('lLeft', 2)],
-                   
-                   'iLeft': [('bLeft', 1), ('jLeft', 1), ('kLeft', 3)],
-                   
-                   'jLeft': [('iLeft', 1), ('lLeft', 1)],
-                   
-                   'kLeft': [('iLeft', 3), ('mLeft', 1)],
-                   
-                   'lLeft': [('hLeft', 2), ('jLeft', 1), ('sLeft', 1)],
-                   
-                   'mLeft': [('kLeft', 1), ('nLeft', 1)],
-                   
-                   'nLeft': [('mLeft', 1), ('oLeft', 2)],
-                   
-                   'oLeft': [('nLeft', 2), ('wLeft', 6)],
-                   
-                   'pLeft': [('fLeft', 3), ('gLeft', 1), ('qLeft', 1)],
-                   
-                   'qLeft': [('rLeft', 2), ('pLeft', 1)],
-                   
-                   'rLeft': [('qLeft', 1), ('vLeft', 2)],
-                   
-                   'sLeft': [('lLeft', 1), ('tLeft', 1)],
-                   
-                   'tLeft': [('sLeft', 1), ('vLeft', 2), ('uLeft', 1)],
-                   
-                   'uLeft': [('tLeft', 1), ('wLeft', 1)],
-                   
-                   'vLeft': [('tLeft', 2), ('rLeft', 2), ('xLeft', 1)],
-                   
-                   'wLeft': [('oLeft', 6), ('uLeft', 1), ('zLeft', 1)],
-                   
-                   'xLeft': [('vLeft', 1), ('zLeft', 1)],
-                   
-                   'zLeft': [('xLeft', 1), ('wLeft', 1)],
-
-                   'aRight': [('a', 2),('bRight', 1), ('cRight', 3)],
-
-                   'bRight': [('aRight', 1), ('cRight', 3), ('eRight', 2), ('iRight', 1)],
-
-                   'cRight': [('aRight', 3), ('bRight', 1), ('dRight', 2)],
-
-                   'dRight': [('cRight', 2), ('eRight', 1), ('fRight', 2), ('gRight', 2),('hRight',1)],
-
-                   'eRight': [('dRight', 1), ('bRight', 2), ('hRight', 1)],
-
-                   'fRight': [('dRight', 2), ('gRight', 3), ('pRight', 3)],
-
-                   'gRight': [('dRight', 2), ('eRight', 1), ('pRight', 2), ('hRight', 2)],
-
-                   'hRight': [('eRight', 1), ('dRight', 2), ('lRight', 2)],
-                   
-                   'iRight': [('bRight', 1), ('jRight', 1), ('kRight', 3)],
-                   
-                   'jRight': [('iRight', 1), ('lRight', 1)],
-                   
-                   'kRight': [('iRight', 3), ('mRight', 1)],
-                   
-                   'lRight': [('hRight', 2), ('jRight', 1), ('sRight', 1)],
-                   
-                   'mRight': [('kRight', 1), ('nRight', 1)],
-                   
-                   'nRight': [('mRight', 1), ('oRight', 2)],
-                   
-                   'oRight': [('nRight', 2), ('wRight', 6)],
-                   
-                   'pRight': [('fRight', 3), ('gRight', 1), ('qRight', 1)],
-                   
-                   'qRight': [('rRight', 2), ('pRight', 1)],
-                   
-                   'rRight': [('qRight', 1), ('vRight', 2)],
-                   
-                   'sRight': [('lRight', 1), ('tRight', 1)],
-                   
-                   'tRight': [('sRight', 1), ('vRight', 2), ('uRight', 1)],
-                   
-                   'uRight': [('tRight', 1), ('wRight', 1)],
-                   
-                   'vRight': [('tRight', 2), ('rRight', 2), ('xRight', 1)],
-                   
-                   'wRight': [('oRight', 6), ('uRight', 1), ('zRight', 1)],
-                   
-                   'xRight': [('vRight', 1), ('zRight', 1)],
-                   
-                   'zRight': [('xRight', 1), ('wRight', 1)]
+        self.g3 = {'a': [('a0',3), ('a1',2), ('b',1), ('c',3)],
+                   'b': [('a',1), ('c',3), ('e',2), ('i',1)],
+                   'c': [('a',3), ('b',1), ('d',2)],
+                   'd': [('c',2), ('e',1), ('f',2), ('g',2), ('h',1)],
+                   'e': [('d',1), ('b',2), ('h',1)],
+                   'f': [('d',2), ('g',3), ('p',3)],
+                   'g': [('d',2), ('e',1), ('p',2), ('h',2)],
+                   'h': [('e',1), ('d',2), ('l',2)],
+                   'i': [('b',1), ('j',1), ('k',3)],
+                   'j': [('i',1), ('l',1)],
+                   'k': [('i',3), ('m',1)],
+                   'l': [('h',2), ('j',1), ('s',1)],
+                   'm': [('k',1), ('n',1)],
+                   'n': [('m',1), ('o',2)],
+                   'o': [('n',2), ('w',6)],
+                   'p': [('f',3), ('g',1), ('q',1)],
+                   'q': [('r',2), ('p',1)],
+                   'r': [('q',1), ('v',2)],
+                   's': [('l',1), ('t',1)],
+                   't': [('s',1), ('v',2), ('u',1)],
+                   'u': [('t',1), ('w',1)],
+                   'v': [('t',2), ('r',2), ('x',1)],
+                   'w': [('o',6), ('u',1), ('z',1)],
+                   'x': [('v',1), ('z',1)],
+                   'z': [('x',1), ('w',1)],
+                   'a0': [('a',3), ('b0',1), ('c0',3)],
+                   'b0': [('a0',1), ('c0',3), ('e0',2), ('i0',1)],
+                   'c0': [('a0',3), ('b0',1), ('d0',2)],
+                   'd0': [('c0',2), ('e0',1), ('f0',2), ('g0',2), ('h0',1)],
+                   'e0': [('d0',1), ('b0',2), ('h0',1)],
+                   'f0': [('d0',2), ('g0',3), ('p0',3)],
+                   'g0': [('d0',2), ('e0',1), ('p0',2), ('h0',2)],
+                   'h0': [('e0',1), ('d0',2), ('l0',2)],
+                   'i0': [('b0',1), ('j0',1), ('k0',3)],
+                   'j0': [('i0',1), ('l0',1)],
+                   'k0': [('i0',3), ('m0',1)],
+                   'l0': [('h0',2), ('j0',1), ('s0',1)],
+                   'm0': [('k0',1), ('n0',1)],
+                   'n0': [('m0',1), ('o0',2)],
+                   'o0': [('n0',2), ('w0',6)],
+                   'p0': [('f0',3), ('g0',1), ('q0',1)],
+                   'q0': [('r0',2), ('p0',1)],
+                   'r0': [('q0',1), ('v0',2)],
+                   's0': [('l0',1), ('t0',1)],
+                   't0': [('s0',1), ('v0',2), ('u0',1)],
+                   'u0': [('t0',1), ('w0',1)],
+                   'v0': [('t0',2), ('r0',2), ('x0',1)],
+                   'w0': [('o0',6), ('u0',1), ('z0',1)],
+                   'x0': [('v0',1), ('z0',1)],
+                   'z0': [('x0',1), ('w0',1)],
+                   'a1': [('a',2), ('b1',1), ('c1',3)],
+                   'b1': [('a1',1), ('c1',3), ('e1',2), ('i1',1)],
+                   'c1': [('a1',3), ('b1',1), ('d1',2)],
+                   'd1': [('c1',2), ('e1',1), ('f1',2), ('g1',2), ('h1',1)],
+                   'e1': [('d1',1), ('b1',2), ('h1',1)],
+                   'f1': [('d1',2), ('g1',3), ('p1',3)],
+                   'g1': [('d1',2), ('e1',1), ('p1',2), ('h1',2)],
+                   'h1': [('e1',1), ('d1',2), ('l1',2)],
+                   'i1': [('b1',1), ('j1',1), ('k1',3)],
+                   'j1': [('i1',1), ('l1',1)],
+                   'k1': [('i1',3), ('m1',1)],
+                   'l1': [('h1',2), ('j1',1), ('s1',1)],
+                   'm1': [('k1',1), ('n1',1)],
+                   'n1': [('m1',1), ('o1',2)],
+                   'o1': [('n1',2), ('w1',6)],
+                   'p1': [('f1',3), ('g1',1), ('q1',1)],
+                   'q1': [('r1',2), ('p1',1)],
+                   'r1': [('q1',1), ('v1',2)],
+                   's1': [('l1',1), ('t1',1)],
+                   't1': [('s1',1), ('v1',2), ('u1',1)],
+                   'u1': [('t1',1), ('w1',1)],
+                   'v1': [('t1',2), ('r1',2), ('x1',1)],
+                   'w1': [('o1',6), ('u1',1), ('z1',1)],
+                   'x1': [('v1',1), ('z1',1)],
+                   'z1': [('x1',1), ('w1',1)]
                    }
-                   
-        self.g4 = {(1,1): [((1,2), 1)],
-                   (1,2): [((1,1),1), ((2,1), 1)],
-                   (2,1): [((1,2), 1)]
+
+        self.g4 = {(1,1): [((1,2),1)],
+                   (1,2): [((1,1),1), ((2,1),1)],
+                   (2,1): [((1,2),1)]
                   }
-
-# Testing 1 path - graph with 26 nodes
+                  
     def test_graph1(self):
+        """
+        Testing graph with 26 nodes
+        """
         tic = time.perf_counter()
-           
-        self.assertEqual(Dijkstras().dijkstras(self.g1, 'a', 'z'), (9, ['a', 'b', 'i', 'j', 'l', 's', 't', 'u', 'w', 'z']))
-        
+        self.assertEqual(Dijkstras().dijkstras(self.g1,'a','z'), (9,['a','b','i','j','l','s','t','u','w','z']))
         toc = time.perf_counter()
-        
-        print(f"Graph 1 Dijkstras Test - 26 nodes {toc - tic:0.4f} seconds")
+        print("Graph 1 Dijkstras Test - 26 nodes {:0.4f} seconds".format(toc-tic))
 
-#Testing 2 paths - graph with 52 nodes
     def test_graph2(self):
+        """
+        Testing graph with 52 nodes
+        """
         tic = time.perf_counter()
-           
-        self.assertEqual(Dijkstras().dijkstras(self.g2, 'a', 'z'), (9, ['a', 'b', 'i', 'j', 'l', 's', 't', 'u', 'w', 'z']))
-        
+        self.assertEqual(Dijkstras().dijkstras(self.g2,'a','z'), (9,['a','b','i','j','l','s','t','u','w','z']))
         toc = time.perf_counter()
-        
-        print(f"Graph 2 Dijkstras Test - 52 nodes {toc - tic:0.4f} seconds")
+        print("Graph 2 Dijkstras Test - 52 nodes {:0.4f} seconds".format(toc-tic))
+     
 
-#Testing 3 paths - full graph with 78 nodes
     def test_graph3(self):
+        """
+        Testing graph with 78 nodes
+        """
         tic = time.perf_counter()
-           
-        self.assertEqual(Dijkstras().dijkstras(self.g3, 'a', 'z'), (9, ['a', 'b', 'i', 'j', 'l', 's', 't', 'u', 'w', 'z']))
-        
+        self.assertEqual(Dijkstras().dijkstras(self.g3,'a','z'), (9,['a','b','i','j','l','s','t','u','w','z']))
         toc = time.perf_counter()
-        
-        print(f"Graph 3 Dijkstras Test - 78 nodes {toc - tic:0.4f} seconds")  
+        print("Graph 3 Dijkstras Test - 52 nodes {:0.4f} seconds".format(toc-tic))
 
-#Testing tuples
     def test_graph4(self):
+        """
+        Testing graph with tuples
+        """
         tic = time.perf_counter()
-        
-        self.assertEqual(Dijkstras().dijkstras(self.g4, (1,1), (2,1)), ( 2, [(1,1), (1,2), (2,1),]))
-         
+        self.assertEqual(Dijkstras().dijkstras(self.g4, (1,1), (2,1)), ( 2,[(1,1), (1,2), (2,1),]))
         toc = time.perf_counter()
+        print("Graph 4 Dijkstras Test with tuples {:0.4f} seconds".format(toc-tic))
         
-        print(f"Graph 4 Dijkstras Test with Tuple {toc - tic:0.4f} seconds")  
-    
 if __name__ == '__main__':
     unittest.main()
