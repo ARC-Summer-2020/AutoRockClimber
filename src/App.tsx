@@ -22,7 +22,6 @@ import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 // import bouldering from "./images/Bouldering-Start-Image.jpg";
-import request from 'request';
 import { remote } from 'electron';
 const fs = remote.require('fs');
 
