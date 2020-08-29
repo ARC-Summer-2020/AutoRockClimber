@@ -97,7 +97,7 @@ const App = () => {
     var uploadedImage = "";
     var uploadedImagePath = "";
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(true);
 
     //Number Input Fields
     const [heightFt, setHeightFt] = React.useState(0);
