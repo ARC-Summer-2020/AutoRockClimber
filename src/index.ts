@@ -47,28 +47,3 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
-
-//WORKS HERE
-// import request from 'request';
-// import fs from 'fs';
-
-// var options = {
-//   'method': 'POST',
-//   'url': 'http://localhost:8002/rockLibrary/imageupload',
-//   'headers': {
-//   },
-//   formData: {
-//     'image': {
-//       'value': fs.createReadStream('C:/Users/Megan/Desktop/Dogs/hqdefault.jpg'),
-//       'options': {
-//         'filename': 'C:/Users/Megan/Desktop/Dogs/hqdefault.jpg',
-//         'contentType': ''
-//       }
-//     },
-//     'color': 'blue'
-//   }
-// };
-// request(options, function (error: string, response: { body: any; }) {
-//   if (error) throw new Error(error);
-//   console.log(response.body);
-// });
