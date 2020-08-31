@@ -44,7 +44,8 @@ def getImageUploadAndColor():
 
     if not colorRequest in colors:
         abort(407, 'Bad color input')
-
+    
+    # fix if else to elif like decision engineend point script
     userHeightRequest = request.forms.get('userHeight')
     if userHeightRequest is not None and not userHeightRequest.isnumeric():
         abort(400, 'Bad user height number input')
