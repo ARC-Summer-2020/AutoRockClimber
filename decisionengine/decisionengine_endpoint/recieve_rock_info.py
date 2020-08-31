@@ -12,7 +12,7 @@ header = ['content-type']
 # Keys of each element: placement, type
 rocks = []
 
-@route('decisionEngine/shortestPath', method='POST')
+@route('/decisionEngine/shortestPath', method='POST')
 def find_path():
     """Gets the request to find the shortest path on the given path.
     Example request: 
@@ -40,12 +40,30 @@ def find_path():
         if request.get_header(head) != headers.get(head):
             abort(406, 'Incorrect headers')
     rocks = request.json.get('rocks')
-    print(rocks)
     if not rocks:
         abort(400, 'Bad request')
     for rock in rocks:
         if not (rock.get('placement') or rock.get('type')):
             abort(400, 'Bad request')
+
+    userHeightRequest = request.json.get('userHeight')
+    if userHeightRequest is None:
+        userHeightRequest = '' 
+    elif not isinstance(userHeightRequest, (int, float, complex)):
+        abort(400, 'Bad user height number input')
+
+    wallHeightRequest = request.json.get('wallHeight')
+    if wallHeightRequest is None:
+        wallHeightRequest = '' 
+    elif not isinstance(wallHeightRequest, (int, float, complex)):
+        abort(400, 'Bad wall height number input')
+
+    endPts = {
+        "rocks":rocks,
+        "userHeight":userHeightRequest,
+        "wallHeight":wallHeightRequest
+    }
+    print(endPts)
 
     return {'Message': 'Request successfully recieved, congratz on your rockz', 'Response rocks': rocks}
 
