@@ -8,7 +8,8 @@ class DijkstrasTimeTest(unittest.TestCase):
     Completeness
     """
     def setUp(self):
-        #Graph with 26 Nodes
+
+        # Graph with 26 Nodes
         self.g1 = {'a': [('b',1), ('c',3)],
                    'b': [('a',1), ('c',3), ('e',2), ('i',1)],
                    'c': [('a',3), ('b',1), ('d',2)],
@@ -36,7 +37,7 @@ class DijkstrasTimeTest(unittest.TestCase):
                    'z': [('x',1), ('w',1)]
                     }
 
-        #Graph with 52 nodes
+        # Graph with 52 nodes
         self.g2 = {'a': [('a0',3), ('b',1), ('c',3)],
                    'b': [('a',1), ('c',3), ('e',2), ('i',1)],
                    'c': [('a',3), ('b',1), ('d',2)],
@@ -167,6 +168,7 @@ class DijkstrasTimeTest(unittest.TestCase):
                    'z1': [('x1',1), ('w1',1)]
                    }
 
+        # Graph with tuples
         self.g4 = {(1,1): [((1,2),1)],
                    (1,2): [((1,1),1), ((2,1),1)],
                    (2,1): [((1,2),1)]
@@ -198,7 +200,7 @@ class DijkstrasTimeTest(unittest.TestCase):
         tic = time.perf_counter()
         self.assertEqual(Dijkstras().dijkstras(self.g3,'a','z'), (9,['a','b','i','j','l','s','t','u','w','z']))
         toc = time.perf_counter()
-        print("Graph 3 Dijkstras Test - 52 nodes {:0.4f} seconds".format(toc-tic))
+        print("Graph 3 Dijkstras Test - 78 nodes {:0.4f} seconds".format(toc-tic))
 
     def test_graph4(self):
         """
