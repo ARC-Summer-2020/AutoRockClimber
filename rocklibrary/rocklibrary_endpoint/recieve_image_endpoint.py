@@ -38,6 +38,7 @@ def getImageUploadAndColor():
     
     
     colorRequest = request.forms.get('color')
+    print(colorRequest)
     imageRequest = request.files.get('image')
     if not (colorRequest and imageRequest):
         abort(400, 'Bad request')
@@ -47,16 +48,16 @@ def getImageUploadAndColor():
     
     # fix if else to elif like decision engineend point script
     userHeightRequest = request.forms.get('userHeight')
-    if userHeightRequest is not None and not userHeightRequest.isnumeric():
-        abort(400, 'Bad user height number input')
-    else:
+    if userHeightRequest is None:
         userHeightRequest = ''
-
+    elif not userHeightRequest.isnumeric():
+        abort(400, 'Bad user height number input')
+        
     wallHeightRequest = request.forms.get('wallHeight')
-    if wallHeightRequest is not None and not wallHeightRequest.isnumeric():
-        abort(400, 'Bad wall height number input')
-    else:
+    if wallHeightRequest is None:
         wallHeightRequest = ''
+    elif not wallHeightRequest.isnumeric():
+        abort(400, 'Bad wall height number input')
 
     imageName = imageRequest.filename.split('.')
     if len(imageName) > 2 or imageName[len(imageName)-1] not in ('jpeg', 'jpg', 'png'):
@@ -70,6 +71,14 @@ def getImageUploadAndColor():
     imageRequest.save(file_path, overwrite=True)
     im = Image.open(file_path)
     im.show()
+
+    endPts = {
+        "color":colorRequest,
+        "image":imageRequest,
+        "userHeight":userHeightRequest,
+        "wallHeight":wallHeightRequest
+    }
+    print(endPts)
 
     imageUpload = {'imagePath': file_path, 'color': colorRequest}
 
