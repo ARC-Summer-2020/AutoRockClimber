@@ -116,8 +116,7 @@ const App = () => {
           position="fixed"
           className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
-          })}
-        >
+          })}>
           <Toolbar>
             <Typography variant="h6" noWrap className={classes.title}>
               Welcome to the Auto Rock Climber (ARC)!
@@ -127,8 +126,7 @@ const App = () => {
               aria-label="open drawer"
               edge="end"
               onClick={handleDrawerOpen}
-              className={clsx(open && classes.hide)}
-            >
+              className={clsx(open && classes.hide)}>
               <MenuIcon />
             </IconButton>
           </Toolbar>
@@ -136,8 +134,7 @@ const App = () => {
         <main
           className={clsx(classes.content, {
           [classes.contentShift]: open,
-        })} 
-        >
+        })}>
           <div className={classes.drawerHeader} />
           <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
             <img width="130%" id="imageBouldering" src={bouldering} alt="Indoor Bouldering" />
@@ -151,8 +148,7 @@ const App = () => {
           open={open}
           classes={{
             paper: classes.drawerPaper,
-          }}
-        >
+          }}>
           <div className={classes.drawerHeader}>
             <IconButton onClick={handleDrawerClose}>
               <ChevronRightIcon />
@@ -166,10 +162,10 @@ const App = () => {
           <TextField style={{margin:"10px"}} id="outlined-basic" label="Armspan" variant="outlined" />
           <Divider />
           <Typography style={{margin:"10px"}}>2. Upload the route image</Typography>
-          <Button style={{margin:"10px"}} variant="contained" color="secondary" onClick={() => { handleOpenImage()}}> Upload File <input
-    type="file"
-    style={{ display: "none" }}
-  /></Button>
+          <Button style={{margin:"10px"}} variant="contained" color="secondary" 
+          onClick={() => {handleOpenImage()}}> 
+            Upload File <input type="file" style={{ display: "none" }}/>
+          </Button>
           <Divider />
           <Typography style={{margin:"10px"}}>3. Pick the route color and click Submit</Typography>
           <TextField style={{margin:"10px"}} id="outlined-basic" label="Route Color" variant="outlined" />
