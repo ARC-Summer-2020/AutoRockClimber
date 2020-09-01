@@ -49,22 +49,24 @@ def find_path():
     userHeightRequest = request.json.get('userHeight')
     if userHeightRequest is None:
         userHeightRequest = '' 
-    elif not isinstance(userHeightRequest, (int, float, complex)):
+    elif not isinstance(userHeightRequest, (int, float)):
         abort(400, 'Bad user height number input')
 
     wallHeightRequest = request.json.get('wallHeight')
     if wallHeightRequest is None:
         wallHeightRequest = '' 
-    elif not isinstance(wallHeightRequest, (int, float, complex)):
+    elif not isinstance(wallHeightRequest, (int, float)):
         abort(400, 'Bad wall height number input')
 
-    endPts = {
-        "rocks":rocks,
-        "userHeight":userHeightRequest,
-        "wallHeight":wallHeightRequest
-    }
+    endPts = {}
+    add_KV_pair(endPts, 'rocks', rocks)
+    add_KV_pair(endPts, 'userHeight', userHeightRequest)
+    add_KV_pair(endPts, 'wallHeight', wallHeightRequest)
     print(endPts)
 
-    return {'Message': 'Request successfully recieved, congratz on your rockz', 'Response rocks': rocks}
-
+    return endPts
+    
+def add_KV_pair(dict, key, value):
+    if value is not '':
+        dict[key] = value
 run(host='localhost', port=8001, reloader=True, debug=True)
