@@ -38,7 +38,6 @@ def getImageUploadAndColor():
     
     
     colorRequest = request.forms.get('color')
-    print(colorRequest)
     imageRequest = request.files.get('image')
     if not (colorRequest and imageRequest):
         abort(400, 'Bad request')
@@ -51,7 +50,7 @@ def getImageUploadAndColor():
         userHeightRequest = ''
     else:
         try:
-            user_HEIGHT = float(userHeightRequest)
+            uHeight = float(userHeightRequest)
         except:
             abort(400, 'Bad user height number input')
         
@@ -60,7 +59,7 @@ def getImageUploadAndColor():
         wallHeightRequest = ''
     else:
         try:
-            wall_HEIGHT = float(wallHeightRequest)
+            wHeight = float(wallHeightRequest)
         except:
             abort(400, 'Bad wall height number input')
 
@@ -77,16 +76,19 @@ def getImageUploadAndColor():
     im = Image.open(file_path)
     im.show()
 
-    endPts = {
-        "color":colorRequest,
-        "image":imageRequest,
-        "userHeight":userHeightRequest,
-        "wallHeight":wallHeightRequest
-    }
-    print(endPts)
+    endPts = {}
+    add_KV_pair(endPts, 'color', colorRequest)
+    # Object of type FileUpload is not JSON serializable
+    # add_KV_pair(endPts, 'image', imageRequest) 
+    add_KV_pair(endPts, 'userHeight', userHeightRequest)
+    add_KV_pair(endPts, 'wallHeight', wallHeightRequest)
 
     imageUpload = {'imagePath': file_path, 'color': colorRequest}
 
-    return {'Message': 'Request successful, requested image saved'}
+    return {'response': endPts, 'Message': 'Request successfully recieved, congratz on your rockz'}
+
+def add_KV_pair(dict, key, value):
+    if value != '':
+        dict[key] = value
 
 run(host='localhost', port=8002, reloader=True, debug=True)
