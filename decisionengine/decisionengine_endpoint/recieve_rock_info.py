@@ -63,7 +63,7 @@ def find_path():
     add_KV_pair(endPts, 'userHeight', userHeightRequest)
     add_KV_pair(endPts, 'wallHeight', wallHeightRequest)
 
-    return endPts
+    return {'response': endPts, 'Message': 'Request successfully recieved, congratz on your rockz'}
     
 def add_KV_pair(dict, key, value):
     if value is not '':
