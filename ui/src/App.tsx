@@ -12,11 +12,12 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TextField from '@material-ui/core/TextField';
-
+import { remote } from 'electron';
+const fs = remote.require('fs');
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
-// import bouldering from "./images/Bouldering-Start-Image.jpg";
+import bouldering from './images/Bouldering-Start-Image.jpg';
 
 const drawerWidth = 240;
 
@@ -92,16 +93,30 @@ const App = () => {
         console.log(false);
     };
 
+    const handleOpenImage = () => {
+      
+      remote.dialog.showOpenDialog(
+        { properties: [ 'openFile'], filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }]}
+        )
+        .then(data=>{
+          var _img = fs.readFileSync(data.filePaths[0]).toString('base64');
+          var _out = '<img src="data:image/png;base64,' + _img + '" />';
+          document.getElementById('imagePlaceholder').innerHTML = "";
+          var _target = document.getElementById('imagePlaceholder');
+          _target.insertAdjacentHTML('beforeend', _out);
+          document.getElementById('imageBouldering').hidden = true;
+        })
+    }
+
     return(
     <div>
-      <div className={classes.root}>
+      <div className={classes.root} style={{width: '130%'}}>
         <CssBaseline />
         <AppBar
           position="fixed"
           className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
-          })}
-        >
+          })}>
           <Toolbar>
             <Typography variant="h6" noWrap className={classes.title}>
               Welcome to the Auto Rock Climber (ARC)!
@@ -111,8 +126,7 @@ const App = () => {
               aria-label="open drawer"
               edge="end"
               onClick={handleDrawerOpen}
-              className={clsx(open && classes.hide)}
-            >
+              className={clsx(open && classes.hide)}>
               <MenuIcon />
             </IconButton>
           </Toolbar>
@@ -120,12 +134,11 @@ const App = () => {
         <main
           className={clsx(classes.content, {
           [classes.contentShift]: open,
-        })} 
-        >
+        })}>
           <div className={classes.drawerHeader} />
           <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
-            {/* <img width="75%" src={bouldering} alt="Indoor Bouldering" /> */}
-            <p>IMAGE WILL BE HERE</p>
+            <img width="130%" id="imageBouldering" src={bouldering} alt="Indoor Bouldering" />
+            <div id='imagePlaceholder'></div>
           </div>
         </main>
         <Drawer
@@ -135,8 +148,7 @@ const App = () => {
           open={open}
           classes={{
             paper: classes.drawerPaper,
-          }}
-        >
+          }}>
           <div className={classes.drawerHeader}>
             <IconButton onClick={handleDrawerClose}>
               <ChevronRightIcon />
@@ -150,7 +162,11 @@ const App = () => {
           <TextField style={{margin:"10px"}} id="outlined-basic" label="Armspan" variant="outlined" />
           <Divider />
           <Typography style={{margin:"10px"}}>2. Upload the route image</Typography>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="File Upload" variant="outlined" />
+          <Button style={{margin:"10px"}} variant="contained" color="secondary" 
+          onClick={() => {handleOpenImage()}}>
+            Upload File 
+            <input type="file" style={{ display: "none" }}/>
+          </Button>
           <Divider />
           <Typography style={{margin:"10px"}}>3. Pick the route color and click Submit</Typography>
           <TextField style={{margin:"10px"}} id="outlined-basic" label="Route Color" variant="outlined" />
