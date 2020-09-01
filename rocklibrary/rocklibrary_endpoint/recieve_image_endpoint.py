@@ -49,14 +49,20 @@ def getImageUploadAndColor():
     userHeightRequest = request.forms.get('userHeight')
     if userHeightRequest is None:
         userHeightRequest = ''
-    elif not isinstance(userHeightRequest, (int, float, complex)):
-        abort(400, 'Bad user height number input')
+    else:
+        try:
+            user_HEIGHT = float(userHeightRequest)
+        except:
+            abort(400, 'Bad user height number input')
         
     wallHeightRequest = request.forms.get('wallHeight')
     if wallHeightRequest is None:
         wallHeightRequest = ''
-    elif not isinstance(wallHeightRequest, (int, float, complex)):
-        abort(400, 'Bad wall height number input')
+    else:
+        try:
+            wall_HEIGHT = float(wallHeightRequest)
+        except:
+            abort(400, 'Bad wall height number input')
 
     imageName = imageRequest.filename.split('.')
     if len(imageName) > 2 or imageName[len(imageName)-1] not in ('jpeg', 'jpg', 'png'):
