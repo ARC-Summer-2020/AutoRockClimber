@@ -163,8 +163,9 @@ const App = () => {
           <Divider />
           <Typography style={{margin:"10px"}}>2. Upload the route image</Typography>
           <Button style={{margin:"10px"}} variant="contained" color="secondary" 
-          onClick={() => {handleOpenImage()}}> 
-            Upload File <input type="file" style={{ display: "none" }}/>
+          onClick={() => {handleOpenImage()}}>
+            Upload File 
+            <input type="file" style={{ display: "none" }}/>
           </Button>
           <Divider />
           <Typography style={{margin:"10px"}}>3. Pick the route color and click Submit</Typography>
