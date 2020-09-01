@@ -62,7 +62,6 @@ def find_path():
     add_KV_pair(endPts, 'rocks', rocks)
     add_KV_pair(endPts, 'userHeight', userHeightRequest)
     add_KV_pair(endPts, 'wallHeight', wallHeightRequest)
-    print(endPts)
 
     return endPts
     
