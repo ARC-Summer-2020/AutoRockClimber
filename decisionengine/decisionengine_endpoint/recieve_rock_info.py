@@ -45,27 +45,28 @@ def find_path():
     for rock in rocks:
         if not (rock.get('placement') or rock.get('type')):
             abort(400, 'Bad request')
+    userHeightError = "Bad user height number input"
+    wallHeightError = "Bad wall height number input"
+    userHeightRequest = var_request('userHeight', userHeightError, request)
+    wallHeightRequest = var_request('wallHeight', userHeightRequest, request)
 
-    userHeightRequest = request.json.get('userHeight')
-    if userHeightRequest is None:
-        userHeightRequest = '' 
-    elif not isinstance(userHeightRequest, (int, float)):
-        abort(400, 'Bad user height number input')
+    params = {}
+    add_KV_pair(params, 'rocks', rocks)
+    add_KV_pair(params, 'userHeight', userHeightRequest)
+    add_KV_pair(params, 'wallHeight', wallHeightRequest)
 
-    wallHeightRequest = request.json.get('wallHeight')
-    if wallHeightRequest is None:
-        wallHeightRequest = '' 
-    elif not isinstance(wallHeightRequest, (int, float)):
-        abort(400, 'Bad wall height number input')
-
-    endPts = {}
-    add_KV_pair(endPts, 'rocks', rocks)
-    add_KV_pair(endPts, 'userHeight', userHeightRequest)
-    add_KV_pair(endPts, 'wallHeight', wallHeightRequest)
-
-    return {'response': endPts, 'Message': 'Request successfully recieved, congratz on your rockz'}
+    return {'response': params, 'Message': 'Request successfully recieved, congratz on your rockz'}
     
 def add_KV_pair(dict, key, value):
     if value is not '':
         dict[key] = value
+
+def var_request(param, errorMsg, request):
+    varRequest = request.json.get(param)
+    if varRequest is None:
+        varRequest = '' 
+    elif not isinstance(varRequest, (int, float)):
+        abort(400, errorMsg)
+    return varRequest
+
 run(host='localhost', port=8001, reloader=True, debug=True)
