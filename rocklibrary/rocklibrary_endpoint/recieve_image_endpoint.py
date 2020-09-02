@@ -45,23 +45,11 @@ def getImageUploadAndColor():
     if not colorRequest in colors:
         abort(407, 'Bad color input')
     
-    userHeightRequest = request.forms.get('userHeight')
-    if userHeightRequest is None:
-        userHeightRequest = ''
-    else:
-        try:
-            uHeight = float(userHeightRequest)
-        except:
-            abort(400, 'Bad user height number input')
-        
-    wallHeightRequest = request.forms.get('wallHeight')
-    if wallHeightRequest is None:
-        wallHeightRequest = ''
-    else:
-        try:
-            wHeight = float(wallHeightRequest)
-        except:
-            abort(400, 'Bad wall height number input')
+    userHeightError = "Bad user height number input"
+    wallHeightError = "Bad wall height number input"
+    
+    userHeightRequest = var_request('userHeight', userHeightError, request)
+    wallHeightRequest = var_request('wallHeight', wallHeightError, request)
 
     imageName = imageRequest.filename.split('.')
     if len(imageName) > 2 or imageName[len(imageName)-1] not in ('jpeg', 'jpg', 'png'):
@@ -76,19 +64,30 @@ def getImageUploadAndColor():
     im = Image.open(file_path)
     im.show()
 
-    endPts = {}
-    add_KV_pair(endPts, 'color', colorRequest)
+    params = {}
+    add_KV_pair(params, 'color', colorRequest)
     # Object of type FileUpload is not JSON serializable
     # add_KV_pair(endPts, 'image', imageRequest) 
-    add_KV_pair(endPts, 'userHeight', userHeightRequest)
-    add_KV_pair(endPts, 'wallHeight', wallHeightRequest)
+    add_KV_pair(params, 'userHeight', userHeightRequest)
+    add_KV_pair(params, 'wallHeight', wallHeightRequest)
 
     imageUpload = {'imagePath': file_path, 'color': colorRequest}
 
-    return {'response': endPts, 'Message': 'Request successfully recieved, congratz on your rockz'}
+    return {'response': params, 'Message': 'Request successfully recieved, congratz on your rockz'}
 
-def add_KV_pair(dict, key, value):
+def add_KV_pair(params, key, value):
     if value != '':
-        dict[key] = value
+        params[key] = value
+
+def var_request(param, errorMsg, request):
+    varRequest = request.forms.get(param)
+    if varRequest is None:
+        varRequest = ''
+    else:
+        try:
+            testRequest = float(varRequest)
+        except:
+            abort(400, errorMsg)
+    return varRequest
 
 run(host='localhost', port=8002, reloader=True, debug=True)
