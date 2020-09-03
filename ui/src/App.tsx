@@ -107,13 +107,11 @@ const App = () => {
     //Drawer Open
     const handleDrawerOpen = () => {
         setOpen(true);
-        // console.log(true);
     };
 
     //Drawer Close
     const handleDrawerClose = () => {
         setOpen(false);
-        // console.log(false);
     };
 
     //Opening an Image
@@ -134,8 +132,6 @@ const App = () => {
 
     //Updating number text fields
     const handleOnChange = (event: { target: { value: any; }; }, label: string) => {
-      // console.log(event.target.value);
-      // console.log(label);
 
       if(label == "hf"){
         setHeightFt(event.target.value);
@@ -150,13 +146,10 @@ const App = () => {
         setArmspan(event.target.value);
       }
 
-      // console.log("hf:" + heightFt + " hi:" + heightIn + " w:" + weight + " a:" + armspan);
     };
 
     //Submit Button Functionality
     const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      //TODO: send data somewhere and close nav?
-      //TODO: add image check here
       if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != ""){
         handleDrawerClose();
       }
