@@ -93,7 +93,12 @@ const useStyles = makeStyles((theme) => ({
 const App = () => {
     const classes = useStyles();
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+
+    //Image Vars
+    const [uploadedImage, setUploadedImage] = React.useState("");
+    const [uploadedImagePath, setUploadedImagePath] = React.useState("");
+
+    const [open, setOpen] = React.useState(true);
 
     //Number Input Fields
     const [heightFt, setHeightFt] = React.useState(0);
@@ -127,6 +132,8 @@ const App = () => {
           var _target = document.getElementById('imagePlaceholder');
           _target.insertAdjacentHTML('beforeend', _out);
           document.getElementById('imageBouldering').hidden = true;
+          setUploadedImage(_img);
+          setUploadedImagePath(data.filePaths[0]);
         })
     }
 
@@ -150,8 +157,47 @@ const App = () => {
 
     //Submit Button Functionality
     const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != ""){
+
+      if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != "" && uploadedImagePath != ""){
         handleDrawerClose();
+
+        // Push data to server
+        // Convert image string to blob
+        // from https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+        const byteCharacters = atob(uploadedImage);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+          const slice = byteCharacters.slice(offset, offset + 512);
+
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+
+          const byteArray = new Uint8Array(byteNumbers);
+          byteArrays.push(byteArray);
+        }
+
+        const blobImage = new Blob(byteArrays, {type: 'image'});
+
+        // Building FormData for request
+        var formdata = new FormData();
+        formdata.append("image", blobImage, uploadedImagePath);
+        formdata.append("color", "blue");
+
+        // Building Request
+        var requestOptions:RequestInit = {
+          method: 'POST',
+          body: formdata,
+          mode: 'no-cors'
+        };
+
+        //Send request to server
+        fetch("http://localhost:8002/rockLibrary/imageupload", requestOptions)
+          .then(response => response.text())
+          .then(result => console.log(result))
+          .catch(error => console.log('error', error));
       }
       else{
         alert("You must fill all fields correctly before submitting. All number values must be > 0.");
@@ -220,6 +266,7 @@ const App = () => {
           <TextField style={{margin:"10px"}} label="Armspan (ft)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "a")}}/>
           <Divider />
           <Typography style={{margin:"10px"}}>2. Upload the route image</Typography>
+          <Typography style={{margin:"10px", wordWrap: "break-word", maxWidth: "200px"}}>Current: {uploadedImagePath}</Typography>
           <Button style={{margin:"10px"}} variant="contained" color="secondary" 
           onClick={() => {handleOpenImage()}}>
             Upload File 
