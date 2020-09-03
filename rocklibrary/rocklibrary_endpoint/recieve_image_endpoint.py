@@ -44,18 +44,12 @@ def getImageUploadAndColor():
 
     if not colorRequest in colors:
         abort(407, 'Bad color input')
-
-    userHeightRequest = request.forms.get('userHeight')
-    if userHeightRequest is not None and not userHeightRequest.isnumeric():
-        abort(400, 'Bad user height number input')
-    else:
-        userHeightRequest = ''
-
-    wallHeightRequest = request.forms.get('wallHeight')
-    if wallHeightRequest is not None and not wallHeightRequest.isnumeric():
-        abort(400, 'Bad wall height number input')
-    else:
-        wallHeightRequest = ''
+    
+    userHeightError = "Bad user height number input"
+    wallHeightError = "Bad wall height number input"
+    
+    userHeightRequest = var_request('userHeight', userHeightError, request)
+    wallHeightRequest = var_request('wallHeight', wallHeightError, request)
 
     imageName = imageRequest.filename.split('.')
     if len(imageName) > 2 or imageName[len(imageName)-1] not in ('jpeg', 'jpg', 'png'):
@@ -70,8 +64,30 @@ def getImageUploadAndColor():
     im = Image.open(file_path)
     im.show()
 
+    params = {}
+    add_KV_pair(params, 'color', colorRequest)
+    # Object of type FileUpload is not JSON serializable
+    # add_KV_pair(endPts, 'image', imageRequest) 
+    add_KV_pair(params, 'userHeight', userHeightRequest)
+    add_KV_pair(params, 'wallHeight', wallHeightRequest)
+
     imageUpload = {'imagePath': file_path, 'color': colorRequest}
 
-    return {'Message': 'Request successful, requested image saved'}
+    return {'response': params, 'Message': 'Request successfully recieved, congratz on your rockz'}
+
+def add_KV_pair(params, key, value):
+    if value != '':
+        params[key] = value
+
+def var_request(param, errorMsg, request):
+    varRequest = request.forms.get(param)
+    if varRequest is None:
+        varRequest = ''
+    else:
+        try:
+            testRequest = float(varRequest)
+        except:
+            abort(400, errorMsg)
+    return varRequest
 
 run(host='localhost', port=8002, reloader=True, debug=True)
