@@ -12,6 +12,11 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
 import { remote } from 'electron';
 const fs = remote.require('fs');
 import clsx from 'clsx';
@@ -76,6 +81,13 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginRight: 0,
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  }
 }));
 
 const App = () => {
@@ -83,16 +95,26 @@ const App = () => {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
+    //Number Input Fields
+    const [heightFt, setHeightFt] = React.useState(0);
+    const [heightIn, setHeightIn] = React.useState(0);
+    const [weight, setWeight] = React.useState(0);
+    const [armspan, setArmspan] = React.useState(0);
+
+    //Color
+    const [color, setColor] = React.useState('');
+
+    //Drawer Open
     const handleDrawerOpen = () => {
         setOpen(true);
-        console.log(true);
     };
 
+    //Drawer Close
     const handleDrawerClose = () => {
         setOpen(false);
-        console.log(false);
     };
 
+    //Opening an Image
     const handleOpenImage = () => {
       
       remote.dialog.showOpenDialog(
@@ -107,6 +129,41 @@ const App = () => {
           document.getElementById('imageBouldering').hidden = true;
         })
     }
+
+    //Updating number text fields
+    const handleOnChange = (event: { target: { value: any; }; }, label: string) => {
+
+      if(label == "hf"){
+        setHeightFt(event.target.value);
+      }
+      else if(label == "hi"){
+        setHeightIn(event.target.value);
+      }
+      else if(label == "w"){
+        setWeight(event.target.value);
+      }
+      else if(label == "a"){
+        setArmspan(event.target.value);
+      }
+
+    };
+
+    //Submit Button Functionality
+    const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != ""){
+        handleDrawerClose();
+      }
+      else{
+        alert("You must fill all fields correctly before submitting. All number values must be > 0.");
+      }
+
+    };
+
+    //Handling Dropdown Functionality
+    const handleChange = (event: React.ChangeEvent<{ name?: string; value: unknown; }>) => {
+      var valueString = String(event.target.value);
+      setColor(valueString);
+    };
 
     return(
     <div>
@@ -157,9 +214,10 @@ const App = () => {
           </div>
           <Divider />
           <Typography style={{margin:"10px"}}>1. Enter your dimensions</Typography>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Height" variant="outlined" />
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Weight" variant="outlined" />
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Armspan" variant="outlined" />
+          <TextField style={{margin:"10px"}} label="Height (ft)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "hf")}}/>
+          <TextField style={{margin:"10px"}} label="Height (in)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "hi")}}/>
+          <TextField style={{margin:"10px"}} label="Weight (lbs)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "w")}}/>
+          <TextField style={{margin:"10px"}} label="Armspan (ft)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "a")}}/>
           <Divider />
           <Typography style={{margin:"10px"}}>2. Upload the route image</Typography>
           <Button style={{margin:"10px"}} variant="contained" color="secondary" 
@@ -169,8 +227,32 @@ const App = () => {
           </Button>
           <Divider />
           <Typography style={{margin:"10px"}}>3. Pick the route color and click Submit</Typography>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Route Color" variant="outlined" />
-          <Button style={{margin:"10px"}} variant="contained" color="secondary"> Submit </Button>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel id="route-color-label">Route Color</InputLabel>
+            <Select
+              labelId="route-color-label"
+              value={color}
+              onChange={(e)=>{handleChange(e)}}
+              label="Route Color"
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={"blue"}>Blue</MenuItem>
+              <MenuItem value={"green"}>Green</MenuItem>
+              <MenuItem value={"black"}>Black</MenuItem>
+              <MenuItem value={"red"}>Red</MenuItem>
+              <MenuItem value={"pink"}>Pink</MenuItem>
+              <MenuItem value={"purple"}>Purple</MenuItem>
+              <MenuItem value={"white"}>White</MenuItem>
+              <MenuItem value={"orange"}>Orange</MenuItem>
+              <MenuItem value={"yellow"}>Yellow</MenuItem>
+              <MenuItem value={"brown"}>Brown</MenuItem>
+              <MenuItem value={"grey"}>Grey</MenuItem>
+            </Select>
+          </FormControl>
+
+          <Button style={{margin:"10px"}} variant="contained" color="secondary" onClick={(e)=>{handleSubmit(e)}}> Submit </Button> 
         </Drawer>
       </div>
     </div>
