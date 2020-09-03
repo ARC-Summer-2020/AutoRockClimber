@@ -187,7 +187,7 @@ const App = () => {
         formdata.append("color", "blue");
 
         // Building Request
-        var requestOptions = {
+        var requestOptions:RequestInit = {
           method: 'POST',
           body: formdata,
           mode: 'no-cors'
