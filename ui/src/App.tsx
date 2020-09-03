@@ -221,10 +221,10 @@ const App = () => {
           </div>
           <Divider />
           <Typography style={{margin:"10px"}}>1. Enter your dimensions</Typography>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Height (ft)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "hf")}}/>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Height (in)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "hi")}}/>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Weight (lbs)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "w")}}/>
-          <TextField style={{margin:"10px"}} id="outlined-basic" label="Armspan (ft)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "a")}}/>
+          <TextField style={{margin:"10px"}} label="Height (ft)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "hf")}}/>
+          <TextField style={{margin:"10px"}} label="Height (in)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "hi")}}/>
+          <TextField style={{margin:"10px"}} label="Weight (lbs)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "w")}}/>
+          <TextField style={{margin:"10px"}} label="Armspan (ft)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "a")}}/>
           <Divider />
           <Typography style={{margin:"10px"}}>2. Upload the route image</Typography>
           <Button style={{margin:"10px"}} variant="contained" color="secondary" 
@@ -235,10 +235,9 @@ const App = () => {
           <Divider />
           <Typography style={{margin:"10px"}}>3. Pick the route color and click Submit</Typography>
           <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel id="demo-simple-select-outlined-label">Route Color</InputLabel>
+            <InputLabel id="route-color-label">Route Color</InputLabel>
             <Select
-              labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
+              labelId="route-color-label"
               value={color}
               onChange={(e)=>{handleChange(e)}}
               label="Route Color"
