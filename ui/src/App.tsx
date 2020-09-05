@@ -1,37 +1,55 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
-import Button from '@material-ui/core/Button';
-import Drawer from '@material-ui/core/Drawer';
+//Full App
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+
+//Top Toolbar
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+
+//Main Section
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+//Drawer/Sidebar
+import Drawer from '@material-ui/core/Drawer';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+
+//Drawer/Sidebar - Dropdown
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+
+//Dialogs
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
+
+//Electron/App Imports
 import { remote } from 'electron';
 const fs = remote.require('fs');
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
+//Default Image
 import bouldering from './images/Bouldering-Start-Image.jpg';
-import { Dialog, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 
+//Drawer Width
 const drawerWidth = 240;
 
+//Styles
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
-  rootProgress: {
+  progressBar: {
     width: '100%',
     marginBottom: '30px'
   },
@@ -90,9 +108,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: 120,
   },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  }
 }));
 
 const App = () => {
@@ -103,6 +118,7 @@ const App = () => {
     const [uploadedImage, setUploadedImage] = React.useState("");
     const [uploadedImagePath, setUploadedImagePath] = React.useState("");
 
+    //Drawer
     const [open, setOpen] = React.useState(true);
 
     //Number Input Fields
@@ -267,7 +283,7 @@ const App = () => {
           [classes.contentShift]: open,
         })}>
           <div className={classes.drawerHeader} />
-          <div id="loading-div"className={classes.rootProgress} hidden={true}>
+          <div id="loading-div"className={classes.progressBar} hidden={true}>
             <Typography>Your image is being processed...</Typography>
             <LinearProgress color="secondary" />
           </div>
@@ -275,7 +291,6 @@ const App = () => {
             <img id="imageBouldering" src={bouldering} alt="Indoor Bouldering" />
             <div id='imagePlaceholder'></div>
           </div>
-          
         </main>
         {/* Drawer is the sidebar on the right side */}
         <Drawer
