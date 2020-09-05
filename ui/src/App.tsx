@@ -1,34 +1,57 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
-import Button from '@material-ui/core/Button';
-import Drawer from '@material-ui/core/Drawer';
+//Full App
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+
+//Top Toolbar
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+
+//Main Section
+import LinearProgress from '@material-ui/core/LinearProgress';
+
+//Drawer/Sidebar
+import Drawer from '@material-ui/core/Drawer';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 
+//Drawer/Sidebar - Dropdown
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+
+//Dialogs
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
+
+//Electron/App Imports
 import { remote } from 'electron';
 const fs = remote.require('fs');
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
+//Default Image
 import bouldering from './images/Bouldering-Start-Image.jpg';
 
+//Drawer Width
 const drawerWidth = 240;
 
+//Styles
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+  },
+  progressBar: {
+    width: '100%',
+    marginBottom: '30px'
   },
   appBar: {
     transition: theme.transitions.create(['margin', 'width'], {
@@ -85,9 +108,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: 120,
   },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  }
 }));
 
 const App = () => {
@@ -98,6 +118,7 @@ const App = () => {
     const [uploadedImage, setUploadedImage] = React.useState("");
     const [uploadedImagePath, setUploadedImagePath] = React.useState("");
 
+    //Drawer
     const [open, setOpen] = React.useState(true);
 
     //Number Input Fields
@@ -108,6 +129,10 @@ const App = () => {
 
     //Color
     const [color, setColor] = React.useState('');
+
+    //Dialogs
+    const [waitDialogOpen, setWaitDialogOpen] = React.useState(false);
+    const [errorDialogOpen, setErrorDialogOpen] = React.useState(false);
 
     //Drawer Open
     const handleDrawerOpen = () => {
@@ -127,7 +152,7 @@ const App = () => {
         )
         .then(data=>{
           var _img = fs.readFileSync(data.filePaths[0]).toString('base64');
-          var _out = '<img src="data:image/png;base64,' + _img + '" />';
+          var _out = '<img src="data:image/png;base64,' + _img + '" width="150%" />';
           document.getElementById('imagePlaceholder').innerHTML = "";
           var _target = document.getElementById('imagePlaceholder');
           _target.insertAdjacentHTML('beforeend', _out);
@@ -158,9 +183,12 @@ const App = () => {
     //Submit Button Functionality
     const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 
-      if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != "" && uploadedImagePath != ""){
+      if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != "" && uploadedImagePath != "" && (document.getElementById('submit-button') as HTMLInputElement).disabled == false){
         handleDrawerClose();
-
+        (document.getElementById('submit-button') as HTMLInputElement).disabled = true;
+        (document.getElementById('submit-button') as HTMLInputElement).style.backgroundColor = "gray";
+        document.getElementById('loading-div').hidden = false;
+        
         // Push data to server
         // Convert image string to blob
         // from https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
@@ -169,7 +197,6 @@ const App = () => {
 
         for (let offset = 0; offset < byteCharacters.length; offset += 512) {
           const slice = byteCharacters.slice(offset, offset + 512);
-
           const byteNumbers = new Array(slice.length);
           for (let i = 0; i < slice.length; i++) {
             byteNumbers[i] = slice.charCodeAt(i);
@@ -197,10 +224,16 @@ const App = () => {
         fetch("http://localhost:8002/rockLibrary/imageupload", requestOptions)
           .then(response => response.text())
           .then(result => console.log(result))
+          .then(() => (document.getElementById('submit-button') as HTMLInputElement).style.backgroundColor = "black")
+          .then(() => (document.getElementById('submit-button') as HTMLInputElement).disabled = false)
+          .then(() => document.getElementById('loading-div').hidden = true)
           .catch(error => console.log('error', error));
       }
+      else if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != "" && uploadedImagePath != "" && (document.getElementById('submit-button') as HTMLInputElement).disabled == true){
+        setWaitDialogOpen(true);
+      }
       else{
-        alert("You must fill all fields correctly before submitting. All number values must be > 0.");
+        setErrorDialogOpen(true);
       }
 
     };
@@ -211,10 +244,20 @@ const App = () => {
       setColor(valueString);
     };
 
+    //Wait Dialog Close
+    const handleWaitDialogClose = () => { 
+      setWaitDialogOpen(false);
+    }
+
+    //Error Dialog Close
+    const handleErrorDialogClose = () => { 
+      setErrorDialogOpen(false);
+    }
+
     return(
     <div>
-      <div className={classes.root} style={{width: '130%'}}>
-        <CssBaseline />
+      <div className={classes.root} >
+        {/* AppBar is the toolbar at the top */}
         <AppBar
           position="fixed"
           className={clsx(classes.appBar, {
@@ -234,16 +277,22 @@ const App = () => {
             </IconButton>
           </Toolbar>
         </AppBar>
+        {/* Main is the main screen */}
         <main
           className={clsx(classes.content, {
           [classes.contentShift]: open,
         })}>
           <div className={classes.drawerHeader} />
-          <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
-            <img width="130%" id="imageBouldering" src={bouldering} alt="Indoor Bouldering" />
+          <div id="loading-div"className={classes.progressBar} hidden={true}>
+            <Typography>Your image is being processed...</Typography>
+            <LinearProgress color="secondary" />
+          </div>
+          <div style={{ display: 'block'}}>
+            <img id="imageBouldering" src={bouldering} alt="Indoor Bouldering" />
             <div id='imagePlaceholder'></div>
           </div>
         </main>
+        {/* Drawer is the sidebar on the right side */}
         <Drawer
           className={classes.drawer}
           variant="persistent"
@@ -256,7 +305,7 @@ const App = () => {
             <IconButton onClick={handleDrawerClose}>
               <ChevronRightIcon />
             </IconButton>
-            <Typography>ARC :)</Typography>
+            <Typography>How to Use ARC! :)</Typography>
           </div>
           <Divider />
           <Typography style={{margin:"10px"}}>1. Enter your dimensions</Typography>
@@ -265,7 +314,7 @@ const App = () => {
           <TextField style={{margin:"10px"}} label="Weight (lbs)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "w")}}/>
           <TextField style={{margin:"10px"}} label="Armspan (ft)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "a")}}/>
           <Divider />
-          <Typography style={{margin:"10px"}}>2. Upload the route image</Typography>
+          <Typography style={{margin:"10px"}}>2. Upload the route image (Less than or equal to 754KB)</Typography>
           <Typography style={{margin:"10px", wordWrap: "break-word", maxWidth: "200px"}}>Current: {uploadedImagePath}</Typography>
           <Button style={{margin:"10px"}} variant="contained" color="secondary" 
           onClick={() => {handleOpenImage()}}>
@@ -299,8 +348,44 @@ const App = () => {
             </Select>
           </FormControl>
 
-          <Button style={{margin:"10px"}} variant="contained" color="secondary" onClick={(e)=>{handleSubmit(e)}}> Submit </Button> 
+          <Button id="submit-button" style={{margin:"10px", backgroundColor:"black", color:"white"}} variant="contained" onClick={(e)=>{handleSubmit(e)}}> Submit </Button> 
         </Drawer>
+        {/* Wait Dialog */}
+        <Dialog
+          open={waitDialogOpen}
+          onClose={handleWaitDialogClose}
+          aria-describedby="wait-alert-dialog-desc"
+        >
+          <DialogContent>
+            <DialogContentText id="wait-alert-dialog-desc">
+              You have to wait for the current image to finish processing before submitting another.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleWaitDialogClose} color="primary" autoFocus>
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {/* Error Dialog */}
+        <Dialog
+          open={errorDialogOpen}
+          onClose={handleErrorDialogClose}
+          aria-describedby="error-alert-dialog-desc"
+        >
+          <DialogContent>
+            <DialogContentText id="error-alert-dialog-desc">
+              You must fill all fields correctly before submitting. 
+              <br/>
+              All number values must be {">"} 0.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleErrorDialogClose} color="primary" autoFocus>
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
     )};
