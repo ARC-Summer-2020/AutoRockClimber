@@ -360,7 +360,9 @@ const App = () => {
         >
           <DialogContent>
             <DialogContentText id="error-alert-dialog-desc">
-              You must fill all fields correctly before submitting. All number values must be {">"} 0.
+              You must fill all fields correctly before submitting. 
+              <br/>
+              All number values must be {">"} 0.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
