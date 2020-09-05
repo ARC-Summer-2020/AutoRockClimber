@@ -23,6 +23,7 @@ import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import bouldering from './images/Bouldering-Start-Image.jpg';
+import { Dialog, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -112,6 +113,10 @@ const App = () => {
 
     //Color
     const [color, setColor] = React.useState('');
+
+    //Dialogs
+    const [waitDialogOpen, setWaitDialogOpen] = React.useState(false);
+    const [errorDialogOpen, setErrorDialogOpen] = React.useState(false);
 
     //Drawer Open
     const handleDrawerOpen = () => {
@@ -209,10 +214,10 @@ const App = () => {
           .catch(error => console.log('error', error));
       }
       else if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != "" && uploadedImagePath != "" && (document.getElementById('submit-button') as HTMLInputElement).disabled == true){
-        alert("You have to wait for the current image to finish processing before submitting another.");
+        setWaitDialogOpen(true);
       }
       else{
-        alert("You must fill all fields correctly before submitting. All number values must be > 0.");
+        setErrorDialogOpen(true);
       }
 
     };
@@ -222,6 +227,16 @@ const App = () => {
       var valueString = String(event.target.value);
       setColor(valueString);
     };
+
+    //Wait Dialog Close
+    const handleWaitDialogClose = () => { 
+      setWaitDialogOpen(false);
+    }
+
+    //Error Dialog Close
+    const handleErrorDialogClose = () => { 
+      setErrorDialogOpen(false);
+    }
 
     return(
     <div>
@@ -320,6 +335,40 @@ const App = () => {
 
           <Button id="submit-button" style={{margin:"10px", backgroundColor:"black", color:"white"}} variant="contained" onClick={(e)=>{handleSubmit(e)}}> Submit </Button> 
         </Drawer>
+        {/* Wait Dialog */}
+        <Dialog
+          open={waitDialogOpen}
+          onClose={handleWaitDialogClose}
+          aria-describedby="wait-alert-dialog-desc"
+        >
+          <DialogContent>
+            <DialogContentText id="wait-alert-dialog-desc">
+              You have to wait for the current image to finish processing before submitting another.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleWaitDialogClose} color="primary" autoFocus>
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {/* Error Dialog */}
+        <Dialog
+          open={errorDialogOpen}
+          onClose={handleErrorDialogClose}
+          aria-describedby="error-alert-dialog-desc"
+        >
+          <DialogContent>
+            <DialogContentText id="error-alert-dialog-desc">
+              You must fill all fields correctly before submitting. All number values must be {">"} 0.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleErrorDialogClose} color="primary" autoFocus>
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
     )};
