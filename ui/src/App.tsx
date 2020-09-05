@@ -5,7 +5,6 @@ import Button from '@material-ui/core/Button';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,6 +15,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { remote } from 'electron';
 const fs = remote.require('fs');
@@ -29,6 +29,10 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+  },
+  rootProgress: {
+    width: '100%',
+    marginBottom: '30px'
   },
   appBar: {
     transition: theme.transitions.create(['margin', 'width'], {
@@ -127,7 +131,7 @@ const App = () => {
         )
         .then(data=>{
           var _img = fs.readFileSync(data.filePaths[0]).toString('base64');
-          var _out = '<img src="data:image/png;base64,' + _img + '" />';
+          var _out = '<img src="data:image/png;base64,' + _img + '" width="150%" />';
           document.getElementById('imagePlaceholder').innerHTML = "";
           var _target = document.getElementById('imagePlaceholder');
           _target.insertAdjacentHTML('beforeend', _out);
@@ -158,9 +162,12 @@ const App = () => {
     //Submit Button Functionality
     const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 
-      if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != "" && uploadedImagePath != ""){
+      if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != "" && uploadedImagePath != "" && (document.getElementById('submit-button') as HTMLInputElement).disabled == false){
         handleDrawerClose();
-
+        (document.getElementById('submit-button') as HTMLInputElement).disabled = true;
+        (document.getElementById('submit-button') as HTMLInputElement).style.backgroundColor = "gray";
+        document.getElementById('loading-div').hidden = false;
+        
         // Push data to server
         // Convert image string to blob
         // from https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
@@ -169,7 +176,6 @@ const App = () => {
 
         for (let offset = 0; offset < byteCharacters.length; offset += 512) {
           const slice = byteCharacters.slice(offset, offset + 512);
-
           const byteNumbers = new Array(slice.length);
           for (let i = 0; i < slice.length; i++) {
             byteNumbers[i] = slice.charCodeAt(i);
@@ -197,7 +203,13 @@ const App = () => {
         fetch("http://localhost:8002/rockLibrary/imageupload", requestOptions)
           .then(response => response.text())
           .then(result => console.log(result))
+          .then(() => (document.getElementById('submit-button') as HTMLInputElement).style.backgroundColor = "black")
+          .then(() => (document.getElementById('submit-button') as HTMLInputElement).disabled = false)
+          .then(() => document.getElementById('loading-div').hidden = true)
           .catch(error => console.log('error', error));
+      }
+      else if(heightFt > 0 && heightIn > 0 && weight > 0 && armspan > 0 && color != "" && uploadedImagePath != "" && (document.getElementById('submit-button') as HTMLInputElement).disabled == true){
+        alert("You have to wait for the current image to finish processing before submitting another.");
       }
       else{
         alert("You must fill all fields correctly before submitting. All number values must be > 0.");
@@ -213,8 +225,8 @@ const App = () => {
 
     return(
     <div>
-      <div className={classes.root} style={{width: '130%'}}>
-        <CssBaseline />
+      <div className={classes.root} >
+        {/* AppBar is the toolbar at the top */}
         <AppBar
           position="fixed"
           className={clsx(classes.appBar, {
@@ -234,16 +246,23 @@ const App = () => {
             </IconButton>
           </Toolbar>
         </AppBar>
+        {/* Main is the main screen */}
         <main
           className={clsx(classes.content, {
           [classes.contentShift]: open,
         })}>
           <div className={classes.drawerHeader} />
-          <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
-            <img width="130%" id="imageBouldering" src={bouldering} alt="Indoor Bouldering" />
+          <div id="loading-div"className={classes.rootProgress} hidden={true}>
+            <Typography>Your image is being processed...</Typography>
+            <LinearProgress color="secondary" />
+          </div>
+          <div style={{ display: 'block'}}>
+            <img id="imageBouldering" src={bouldering} alt="Indoor Bouldering" />
             <div id='imagePlaceholder'></div>
           </div>
+          
         </main>
+        {/* Drawer is the sidebar on the right side */}
         <Drawer
           className={classes.drawer}
           variant="persistent"
@@ -265,7 +284,7 @@ const App = () => {
           <TextField style={{margin:"10px"}} label="Weight (lbs)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "w")}}/>
           <TextField style={{margin:"10px"}} label="Armspan (ft)" variant="outlined" type="number" onChange={(e)=>{handleOnChange(e, "a")}}/>
           <Divider />
-          <Typography style={{margin:"10px"}}>2. Upload the route image</Typography>
+          <Typography style={{margin:"10px"}}>2. Upload the route image (Less than or equal to 754KB)</Typography>
           <Typography style={{margin:"10px", wordWrap: "break-word", maxWidth: "200px"}}>Current: {uploadedImagePath}</Typography>
           <Button style={{margin:"10px"}} variant="contained" color="secondary" 
           onClick={() => {handleOpenImage()}}>
@@ -299,7 +318,7 @@ const App = () => {
             </Select>
           </FormControl>
 
-          <Button style={{margin:"10px"}} variant="contained" color="secondary" onClick={(e)=>{handleSubmit(e)}}> Submit </Button> 
+          <Button id="submit-button" style={{margin:"10px", backgroundColor:"black", color:"white"}} variant="contained" onClick={(e)=>{handleSubmit(e)}}> Submit </Button> 
         </Drawer>
       </div>
     </div>
