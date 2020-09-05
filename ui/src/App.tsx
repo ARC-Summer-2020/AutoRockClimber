@@ -290,7 +290,7 @@ const App = () => {
             <IconButton onClick={handleDrawerClose}>
               <ChevronRightIcon />
             </IconButton>
-            <Typography>ARC :)</Typography>
+            <Typography>How to Use ARC! :)</Typography>
           </div>
           <Divider />
           <Typography style={{margin:"10px"}}>1. Enter your dimensions</Typography>
